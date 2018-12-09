@@ -6,10 +6,10 @@ class Perso():
         self.y = y
         self.width = width
         self.height = height
-        self.vel = 5
+        self.vitesse = 5
 
     def affichage(self,ECRAN):
-        pygame.draw.rect(ECRAN, (255, 0, 0), (x, y, width, height))
+        pygame.draw.rect(ECRAN, (255, 0, 0), (self.x, self.y, self.width, self.height))
 
 class Joueur(Perso):
     def __init__(self,x,y,width,height):
