@@ -109,5 +109,6 @@ class Labyrinthe:
             print(ligne+"|")
         print("-"*(len(self.carte)*2+3))
                 
-Labyrinthe(10).print_lab()
+Labyrinthe(200)
+print("a")
 #Ligne de test
