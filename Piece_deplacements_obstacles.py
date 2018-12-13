@@ -1,6 +1,7 @@
 import pygame
 import random
 from Class_Persos import Perso, Joueur, Ennemi
+from genLab import Labyrinthe, Zone
 pygame.init()
 
 TAILLE_LABYRINTHE = 3
@@ -10,9 +11,8 @@ NB_CASES = 10
 ECRAN = pygame.display.set_mode(TAILLE_ECRAN)
 #Pour l'instant ce sont des constantes, mais peut etre pas dans la version finale
 
-
 class Piece:
-    listePieces=[]
+    listePieces={}
             
     def __init__(self, numPieceF, typePiece, iF, jF):
     #constructeur
@@ -22,19 +22,25 @@ class Piece:
         self.i = iF
         self.j = jF
 
-    def initTempListePieces():
+##    def initTempListePieces():
+##        #Generation temporaire de la carte globale
+##        numeroActuel=0
+##        while numeroActuel != TAILLE_LABYRINTHE**2-1:
+##            i_init = (numeroActuel/TAILLE_LABYRINTHE)*2
+##            j_init = (numeroActuel%TAILLE_LABYRINTHE)*2
+##            Piece.listePieces.append(Piece(numeroActuel, "type_test", i_init, j_init))
+##            numeroActuel+=1
+
+    def initListePieces(labyF):
         #Generation temporaire de la carte globale
-        numeroActuel=0
-        while numeroActuel != TAILLE_LABYRINTHE**2-1:
-            i_init = (numeroActuel/TAILLE_LABYRINTHE)*2
-            j_init = (numeroActuel%TAILLE_LABYRINTHE)*2
-            Piece.listePieces.append(Piece(numeroActuel, "type_test", i_init, j_init))
-            numeroActuel+=1
+        for i in range(0,labyF.taille, 2):
+            for j in range(0,labyF.taille, 2):
+                Piece.listePieces[labyF.carte[i][j].zone] = Piece(labyF.carte[i][j].zone,"type_test", i, j)
 
 
-    def revele(self):
+    def revele(self, labyF):
         if not self.numPiece in CarteUnePiece.cartesChargees:
-            CarteUnePiece(self.numPiece)
+            CarteUnePiece(self.numPiece,labyF)
             self.vue=True;
 
     
@@ -43,7 +49,7 @@ class Piece:
 
 class CarteUnePiece:
     cartesChargees = {}
-    def __init__(self, numPieceF):
+    def __init__(self, numPieceF,labyF):
     #constructeur
         self.numPiece=numPieceF
 
@@ -60,10 +66,23 @@ class CarteUnePiece:
                 #Ici, pour l'exemple, on appelle le constructeur de la case avec 0 ou 1
 
         #Lecture des murs
-        self.carte[1][1].typeCase = -((self.numPiece+1)%TAILLE_LABYRINTHE**2)
+        self.creer_portes(labyF)
         
         CarteUnePiece.cartesChargees[self.numPiece]=self
         
+    def creer_portes(self, labyF):
+        i_piece = Piece.listePieces[self.numPiece].i
+        j_piece = Piece.listePieces[self.numPiece].j
+        for coords_murs in ((-1,0),(1,0),(0,1),(0,-1)):
+            i_mur = i_piece+coords_murs[0]
+            j_mur = j_piece+coords_murs[1]
+            if 0<=i_mur<labyF.taille and 0<=j_mur<labyF.taille:
+                if not labyF.carte[i_mur][j_mur]:
+                    numPieceSuiv = labyF.carte[i_mur+coords_murs[0]][j_mur+coords_murs[1]].zone
+                    x_case = (NB_CASES-1)//2 + (coords_murs[1]*((NB_CASES-1)//2))
+                    y_case = (NB_CASES-1)//2 + (coords_murs[0]*((NB_CASES-1)//2))
+                    #TODO nul
+                    self.carte[x_case][y_case].typeCase = -numPieceSuiv
         
     def affiche_carte(self):
         #Méthode d'affichage de la grille
@@ -103,12 +122,13 @@ def redrawGameWindow():
 
 ####################################################################################
 #boucle principale
-perso = Joueur(0,0,TAILLE_CASE[0],TAILLE_CASE[1])
 continuer = True
 
-testCarteGlobale = Piece.initTempListePieces()
+laby = Labyrinthe(TAILLE_LABYRINTHE)
+Piece.initListePieces(laby)
 
-Piece.listePieces[perso.piece_actuelle].revele()
+perso = Joueur(0,0,TAILLE_CASE[0],TAILLE_CASE[1])
+Piece.listePieces[perso.piece_actuelle].revele(laby)
 
 while continuer :
 
@@ -119,16 +139,26 @@ while continuer :
         if event.type == pygame.QUIT:
             continuer = False
         if event.type == pygame.KEYDOWN:
+            touche_move = False
             if event.key == pygame.K_LEFT:
-                direction = (-1,0)
+                perso.direction = [-1,0]
+                touche_move = True
             if event.key == pygame.K_RIGHT:
-                direction = (1,0)
+                perso.direction = [1,0]
+                touche_move = True
             if event.key == pygame.K_UP:
-                direction = (0,-1)
+                perso.direction = [0,-1]
+                touche_move = True
             if event.key == pygame.K_DOWN:
-                direction = (0,1)
-            perso.move(direction[0],direction[1],NB_CASES,CarteUnePiece.cartesChargees[perso.piece_actuelle].carte)
+                perso.direction = [0,1]
+                touche_move = True
 
+            if event.key == pygame.K_a:
+                laby.print_lab((Piece.listePieces[perso.piece_actuelle].i, Piece.listePieces[perso.piece_actuelle].j))
+                
+            if touche_move:
+                perso.move(NB_CASES,CarteUnePiece.cartesChargees[perso.piece_actuelle].carte)
+    Piece.listePieces[perso.piece_actuelle].revele(laby)
     redrawGameWindow()
         
             

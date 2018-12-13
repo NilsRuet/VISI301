@@ -34,6 +34,7 @@ class Labyrinthe:
     
     def __init__(self, taille):
         self.carte=["+"]*(2*taille-1)
+        self.taille = 2*taille-1
         
         for i in range(len(self.carte)):
             #Initialisation largeur carte
@@ -91,13 +92,14 @@ class Labyrinthe:
                 self.carte[x][y]=False
             
 
-    def print_lab(self):
+    def print_lab(self, piece_actu=(0,0)):
         print("-"*(len(self.carte)*2+3))
         for i in range(len(self.carte)):
             ligne="| "
             for j in range(len(self.carte[0])):
-                if isinstance(self.carte[i][j], Zone):
-                    #ligne+="{:^4}".format(str(self.carte[i][j].get_zone()))
+                if i==piece_actu[0] and j==piece_actu[1]:
+                    ligne+="{:^2}".format("*")
+                elif isinstance(self.carte[i][j], Zone):
                     ligne+="{:^2}".format(" ")
                 elif isinstance(self.carte[i][j], bool):
                     if self.carte[i][j]:
@@ -108,7 +110,4 @@ class Labyrinthe:
                     ligne+="{:^2}".format(str(self.carte[i][j]))
             print(ligne+"|")
         print("-"*(len(self.carte)*2+3))
-                
-Labyrinthe(200)
-print("a")
-#Ligne de test
+
