@@ -1,4 +1,5 @@
 import random
+from Affichage import *
 
 class Zone:
     nb=0
@@ -103,7 +104,11 @@ class Labyrinthe:
                     ligne+="{:^2}".format(" ")
                 elif isinstance(self.carte[i][j], bool):
                     if self.carte[i][j]:
-                        ligne+="{:^2}".format("+")
+                        if i%2 == 0:
+                            c="+"
+                        else:
+                            c="+"
+                        ligne+="{:^2}".format(c)
                     else:
                         ligne+="{:^2}".format(" ")
                 else:
@@ -111,3 +116,44 @@ class Labyrinthe:
             print(ligne+"|")
         print("-"*(len(self.carte)*2+3))
 
+    def affiche_lab(self, piece_actu=(0,0)):
+        #Pièces
+        for i_lab in range(0,len(self.carte),2):
+            for j_lab in range(0,len(self.carte[0]),2):
+                i = i_lab//2
+                j = j_lab//2
+                
+                largeur=Affichage.CARTE.taille_piece[0]
+                hauteur=Affichage.CARTE.taille_piece[1]
+                
+                x_piece=Affichage.CARTE.coords.xi + (i)*largeur
+                y_piece=Affichage.CARTE.coords.yi + (j)*hauteur
+                
+                
+                if i_lab==piece_actu[1] and j_lab==piece_actu[0]:
+                    #piece_actuelle
+                    pygame.draw.rect(Affichage.ECRAN, (200,200,200), (x_piece, y_piece, largeur, hauteur))
+                else:
+                    pygame.draw.rect(Affichage.ECRAN, (255,255,255), (x_piece, y_piece, largeur, hauteur))
+        #vertical
+        for j_mur in range(0,len(self.carte), 2):
+            for i_mur in range(1,len(self.carte[0]),2):
+                if self.carte[j_mur][i_mur]:
+                    largeur=Affichage.CARTE.taille_piece[0]//10
+                    hauteur=Affichage.CARTE.taille_piece[1]
+
+                    x_mur = (((i_mur)//2)+1)*Affichage.CARTE.taille_piece[0] + Affichage.CARTE.coords.xi
+                    y_mur = (((j_mur)//2))*Affichage.CARTE.taille_piece[1] + Affichage.CARTE.coords.yi
+
+                    pygame.draw.rect(Affichage.ECRAN, (0,255,0), (x_mur, y_mur, largeur, hauteur))
+        #horizontal
+        for j_mur in range(1,len(self.carte), 2):
+            for i_mur in range(0,len(self.carte[0]),2):
+                if self.carte[j_mur][i_mur]:
+                    largeur=Affichage.CARTE.taille_piece[0]
+                    hauteur=Affichage.CARTE.taille_piece[1]//10
+
+                    x_mur = (((i_mur)//2))*Affichage.CARTE.taille_piece[0] + Affichage.CARTE.coords.xi
+                    y_mur = (((j_mur)//2)+1)*Affichage.CARTE.taille_piece[1] + Affichage.CARTE.coords.yi
+
+                    pygame.draw.rect(Affichage.ECRAN, (0,255,0), (x_mur, y_mur, largeur, hauteur))

@@ -1,15 +1,13 @@
 import pygame
 import random
-from Class_Persos import Perso, Joueur, Ennemi
-from genLab import Labyrinthe, Zone
+from Class_Persos import *
+from genLab import *
+from Affichage import *
 pygame.init()
 
-TAILLE_LABYRINTHE = 3
-TAILLE_ECRAN = (500, 500) #largeur / hauteur
-TAILLE_CASE = (50, 50)
-NB_CASES = 10
-ECRAN = pygame.display.set_mode(TAILLE_ECRAN)
-#Pour l'instant ce sont des constantes, mais peut etre pas dans la version finale
+class OptJeu:
+    TAILLE_LABYRINTHE = 3
+    NB_CASES = 10
 
 class Piece:
     listePieces={}
@@ -21,15 +19,6 @@ class Piece:
         self.vue=False
         self.i = iF
         self.j = jF
-
-##    def initTempListePieces():
-##        #Generation temporaire de la carte globale
-##        numeroActuel=0
-##        while numeroActuel != TAILLE_LABYRINTHE**2-1:
-##            i_init = (numeroActuel/TAILLE_LABYRINTHE)*2
-##            j_init = (numeroActuel%TAILLE_LABYRINTHE)*2
-##            Piece.listePieces.append(Piece(numeroActuel, "type_test", i_init, j_init))
-##            numeroActuel+=1
 
     def initListePieces(labyF):
         #Generation temporaire de la carte globale
@@ -54,9 +43,9 @@ class CarteUnePiece:
         self.numPiece=numPieceF
 
         #On initialise un tableau de NB_CASES*NB_CASES qui sera remplit de cases
-        self.carte=[[0]]*NB_CASES
+        self.carte=[[0]]*OptJeu.NB_CASES
         for colonne in range(len(self.carte)):
-            self.carte[colonne]=[0]*NB_CASES
+            self.carte[colonne]=[0]*OptJeu.NB_CASES
         #Ici, initialisé avec des 0 dans toutes les cellules parce que je ne sais pas comment initialiser une liste vide
             
         for colonne in range(len(self.carte)):
@@ -79,9 +68,9 @@ class CarteUnePiece:
             if 0<=i_mur<labyF.taille and 0<=j_mur<labyF.taille:
                 if not labyF.carte[i_mur][j_mur]:
                     numPieceSuiv = labyF.carte[i_mur+coords_murs[0]][j_mur+coords_murs[1]].zone
-                    x_case = (NB_CASES-1)//2 + (coords_murs[1]*((NB_CASES-1)//2))
-                    y_case = (NB_CASES-1)//2 + (coords_murs[0]*((NB_CASES-1)//2))
-                    #TODO nul
+                    x_case = round(((coords_murs[1]+1)/2)*(OptJeu.NB_CASES-1))
+                    y_case = round(((coords_murs[0]+1)/2)*(OptJeu.NB_CASES-1))
+                    #Méthode temporaire de génération des murs
                     self.carte[x_case][y_case].typeCase = -numPieceSuiv
         
     def affiche_carte(self):
@@ -96,23 +85,21 @@ class Case:
 
     def affiche_case(self, colonneF, ligneF):
         #Pour l'instant on affiche un rectangle d'une certaine couleur pour représenter la case
-        hauteur, largeur = TAILLE_CASE[0], TAILLE_CASE[1]
+        hauteur, largeur = Affichage.JEU.taille_case[0], Affichage.JEU.taille_case[1]
         couleur = (self.typeCase*250, self.typeCase*250, self.typeCase*250)
+        x_case = hauteur*colonneF + Affichage.JEU.coords.xi
+        y_case = largeur*ligneF + Affichage.JEU.coords.yi
         #On considère ici que la case vaut 0 ou 1, on affiche noir ou (presque) blanc
         if self.typeCase < 0:
-            pygame.draw.rect(ECRAN, (0,255,0), (hauteur*colonneF, largeur*ligneF, hauteur, largeur))
+            pygame.draw.rect(Affichage.ECRAN, (0,255,0), (x_case, y_case, hauteur, largeur))
         else:
-            pygame.draw.rect(ECRAN, couleur, (hauteur*colonneF, largeur*ligneF, hauteur, largeur))
-    
-
-
+            pygame.draw.rect(Affichage.ECRAN, couleur, (x_case, y_case, hauteur, largeur))
+            
 
 def redrawGameWindow():
-    #affichage carte
     CarteUnePiece.cartesChargees[perso.piece_actuelle].affiche_carte()
-    #affichage perso
-    perso.affichage(ECRAN,TAILLE_CASE)
-    
+    perso.affichage()
+    laby.affiche_lab((Piece.listePieces[perso.piece_actuelle].i, Piece.listePieces[perso.piece_actuelle].j))
     pygame.display.update()
 
 
@@ -124,10 +111,10 @@ def redrawGameWindow():
 #boucle principale
 continuer = True
 
-laby = Labyrinthe(TAILLE_LABYRINTHE)
+laby = Labyrinthe(OptJeu.TAILLE_LABYRINTHE)
 Piece.initListePieces(laby)
 
-perso = Joueur(0,0,TAILLE_CASE[0],TAILLE_CASE[1])
+perso = Joueur(0,0,Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
 Piece.listePieces[perso.piece_actuelle].revele(laby)
 
 while continuer :
@@ -157,7 +144,7 @@ while continuer :
                 laby.print_lab((Piece.listePieces[perso.piece_actuelle].i, Piece.listePieces[perso.piece_actuelle].j))
                 
             if touche_move:
-                perso.move(NB_CASES,CarteUnePiece.cartesChargees[perso.piece_actuelle].carte)
+                perso.move(OptJeu.NB_CASES,CarteUnePiece.cartesChargees[perso.piece_actuelle].carte)
     Piece.listePieces[perso.piece_actuelle].revele(laby)
     redrawGameWindow()
         

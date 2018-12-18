@@ -1,4 +1,5 @@
 import pygame
+from Affichage import *
 
 class Perso():
     def __init__(self,x,y,width,height):
@@ -9,17 +10,18 @@ class Perso():
         self.height = height
         self.vitesse = 5
 
-    def affichage(self,ECRAN,TAILLE_CASE):
-        pygame.draw.rect(ECRAN, (255, 0, 0), (self.x*TAILLE_CASE[0], self.y*TAILLE_CASE[1], self.width, self.height))
+    def affichage(self):
+        rectangle = (self.x*Affichage.JEU.taille_case[0] + Affichage.JEU.coords.xi, self.y*Affichage.JEU.taille_case[1] + Affichage.JEU.coords.yi, self.width, self.height)
+        pygame.draw.rect(Affichage.ECRAN, (255, 0, 0), rectangle)
 
-    def move(self,NB_CASES,piece):
+    def move(self,nb_cases,piece):
         autoriser_mouvement = True
         dx=self.direction[0]
         dy=self.direction[1]
-        if not 0 <= self.x+dx < NB_CASES:
+        if not 0 <= self.x+dx < nb_cases:
             autoriser_mouvement = False
             
-        elif not 0 <= self.y+dy < NB_CASES:
+        elif not 0 <= self.y+dy < nb_cases:
             autoriser_mouvement = False
 
         else:
