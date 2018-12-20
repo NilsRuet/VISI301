@@ -1,4 +1,5 @@
 import pygame
+from Options import *
 class Coords:
     def __init__(self, xF, yF):
         self.xi = xF
@@ -16,8 +17,15 @@ class Affichage_carte:
 
 class Affichage:
     TAILLE_ECRAN = (1000, 500) #largeur / hauteur    
-    ECRAN = pygame.display.set_mode(TAILLE_ECRAN)
-    JEU = Affichage_jeu(Coords(0,0), (50,50))
-    CARTE = Affichage_carte(Coords(550,0), (50,50))
+    X_JEU, Y_JEU = 0, 0
 
-    #Pour l'instant ce sont des constantes, mais peut etre pas dans la version finale
+    ECRAN = pygame.display.set_mode(TAILLE_ECRAN)
+    
+    largeur_case = ((TAILLE_ECRAN[0]//2)//OptJeu.NB_CASES)   
+    JEU = Affichage_jeu(Coords(X_JEU, Y_JEU), (largeur_case,largeur_case))
+
+    X_CARTE, Y_CARTE = ((TAILLE_ECRAN[0])//2)+1,0
+    largeur_piece = (TAILLE_ECRAN[0]//2)//OptJeu.TAILLE_LABYRINTHE
+    CARTE = Affichage_carte(Coords(X_CARTE, Y_CARTE), (largeur_piece,largeur_piece))
+
+    #Pour l'instant ce sont des constantes
