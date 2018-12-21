@@ -18,6 +18,7 @@ class Affichage_carte:
 class Affichage:
     TAILLE_ECRAN = (1000, 500) #largeur / hauteur    
     X_JEU, Y_JEU = 0, 0
+    #Pour l'instant ce sont des constantes
 
     ECRAN = pygame.display.set_mode(TAILLE_ECRAN)
     
@@ -28,4 +29,4 @@ class Affichage:
     largeur_piece = (TAILLE_ECRAN[0]//2)//OptJeu.TAILLE_LABYRINTHE
     CARTE = Affichage_carte(Coords(X_CARTE, Y_CARTE), (largeur_piece,largeur_piece))
 
-    #Pour l'instant ce sont des constantes
+    

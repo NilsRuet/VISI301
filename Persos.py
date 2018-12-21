@@ -35,6 +35,9 @@ class Perso():
              self.y = self.y + dy
              self.x = self.x + dx
 
+    def sortie_atteinte(self, num_sortie):
+        return self.piece_actuelle==num_sortie
+
 class Joueur(Perso):
     def __init__(self,x,y,width,height,pieceF=1):
         Perso.__init__(self,x,y,width,height)

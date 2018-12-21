@@ -21,7 +21,7 @@ continuer = True
 laby = Labyrinthe(OptJeu.TAILLE_LABYRINTHE)
 Piece.initListePieces(laby)
 
-perso = Joueur(0,0,Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
+perso = Joueur(0,0,Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1],laby.depart)
 Piece.listePieces[perso.piece_actuelle].revele(laby)
 
 while continuer :
@@ -46,14 +46,15 @@ while continuer :
             if event.key == pygame.K_DOWN:
                 perso.direction = [0,1]
                 touche_move = True
-
-            if event.key == pygame.K_a:
-                laby.print_lab((Piece.listePieces[perso.piece_actuelle].i, Piece.listePieces[perso.piece_actuelle].j))
                 
             if touche_move:
                 perso.move(OptJeu.NB_CASES,CarteUnePiece.cartesChargees[perso.piece_actuelle].carte)
     Piece.listePieces[perso.piece_actuelle].revele(laby)
     redrawGameWindow()
+    
+    if perso.sortie_atteinte(laby.arrivee):
+        print("Gagné!")
+        continuer=False
         
             
 pygame.quit()

@@ -18,7 +18,6 @@ class Zone:
             parcours_anc_val=parcours_anc_val.suiv
 
         parcours_anc_val.suiv=parcours_nv_val
-        Zone.nb-=1
 
     def get_zone(self):
         parcours = self
@@ -37,37 +36,37 @@ class Labyrinthe:
         self.carte=["+"]*(2*taille-1)
         self.taille = 2*taille-1
         
-        for i in range(len(self.carte)):
+        for colonne in range(len(self.carte)):
             #Initialisation largeur carte
-            self.carte[i]=["+"]*(2*taille-1)
+            self.carte[colonne]=["+"]*(2*taille-1)
 
-        for i in range(0,len(self.carte),2):
+        for colonne in range(0,len(self.carte),2):
             #Initialisation hauteur carte
-            for j in range(0,len(self.carte[0]),2):
-                self.carte[i][j]=Zone()
+            for ligne in range(0,len(self.carte[0]),2):
+                self.carte[colonne][ligne]=Zone()
 
-        for i in range(1,len(self.carte), 2):
+        for colonne in range(1,len(self.carte), 2):
             #Initialisation mur verticaux
-            for j in range(0,len(self.carte[0]),2):
-                self.carte[i][j]=True
+            for ligne in range(0,len(self.carte[0]),2):
+                self.carte[colonne][ligne]=True
 
-        for i in range(0,len(self.carte), 2):
+        for colonne in range(0,len(self.carte), 2):
             #Initialisation mur horizontaux
-            for j in range(1,len(self.carte[0]),2):
-                self.carte[i][j]=True
+            for ligne in range(1,len(self.carte[0]),2):
+                self.carte[colonne][ligne]=True
 
         #Début de l'algorithme de génération
         #On liste les murs du labyrinthes
         liste_murs=[]
         #Murs verticaux
-        for i in range(1,len(self.carte), 2):
-            for j in range(0,len(self.carte[0]),2):
-                liste_murs.append((i,j))
+        for colonne in range(1,len(self.carte), 2):
+            for ligne in range(0,len(self.carte[0]),2):
+                liste_murs.append((colonne,ligne))
 
         #Murs horizontaux
-        for i in range(0,len(self.carte), 2):
-            for j in range(1,len(self.carte[0]),2):
-                liste_murs.append((i,j))
+        for colonne in range(0,len(self.carte), 2):
+            for ligne in range(1,len(self.carte[0]),2):
+                liste_murs.append((colonne,ligne))
 
         #On mélange la liste des murs pour générer un labyrinthe aléatoire
         random.shuffle(liste_murs)
@@ -91,6 +90,11 @@ class Labyrinthe:
                 salle2 = self.carte[salles_voisines[1][0]][salles_voisines[1][1]]
                 salle1.devient(salle2)                
                 self.carte[x][y]=False
+
+        self.depart = random.randint(1,Zone.nb)
+        self.arrivee = random.randint(1,Zone.nb)
+        while self.arrivee==self.depart:
+            self.arrivee = random.randint(1,Zone.nb)
             
 
     def print_lab(self, piece_actu=(0,0)):
@@ -118,43 +122,48 @@ class Labyrinthe:
 
     def affiche_lab(self, piece_actu=(0,0)):
         #Pièces
-        for i_lab in range(0,len(self.carte),2):
-            for j_lab in range(0,len(self.carte[0]),2):
-                i = i_lab//2
-                j = j_lab//2
+        for col_lab in range(0,len(self.carte),2):
+            for ligne_lab in range(0,len(self.carte[0]),2):
+                col = col_lab//2
+                ligne = ligne_lab//2
                 
                 largeur=Affichage.CARTE.taille_piece[0]
                 hauteur=Affichage.CARTE.taille_piece[1]
                 
-                x_piece=Affichage.CARTE.coords.xi + (i)*largeur
-                y_piece=Affichage.CARTE.coords.yi + (j)*hauteur
-                
-                
-                if i_lab==piece_actu[1] and j_lab==piece_actu[0]:
+                x_piece=Affichage.CARTE.coords.xi + (col)*largeur
+                y_piece=Affichage.CARTE.coords.yi + (ligne)*hauteur
+                if col_lab==piece_actu[0] and ligne_lab==piece_actu[1]:
                     #piece_actuelle
                     pygame.draw.rect(Affichage.ECRAN, (200,200,200), (x_piece, y_piece, largeur, hauteur))
+                    
+                elif self.carte[col_lab][ligne_lab].zone == self.depart:
+                    #depart
+                    pygame.draw.rect(Affichage.ECRAN, (0,0,255), (x_piece, y_piece, largeur, hauteur))
+                elif self.carte[col_lab][ligne_lab].zone  == self.arrivee:
+                    #arrivee
+                    pygame.draw.rect(Affichage.ECRAN, (255,0,0), (x_piece, y_piece, largeur, hauteur))
+                    
                 else:
                     pygame.draw.rect(Affichage.ECRAN, (255,255,255), (x_piece, y_piece, largeur, hauteur))
         #vertical
-        for i_mur in range(0,len(self.carte), 2):
-            for j_mur in range(1,len(self.carte[0]),2):
-                if self.carte[i_mur][j_mur]:
+        for col_mur in range(1,len(self.carte), 2):
+            for ligne_mur in range(0,len(self.carte[0]),2):
+                if self.carte[col_mur][ligne_mur]:
                     largeur=Affichage.CARTE.taille_piece[0]//10
                     hauteur=Affichage.CARTE.taille_piece[1]
 
-                    x_mur = (((j_mur)//2)+1)*Affichage.CARTE.taille_piece[0] + Affichage.CARTE.coords.xi
-                    y_mur = (((i_mur)//2))*Affichage.CARTE.taille_piece[1] + Affichage.CARTE.coords.yi
+                    x_mur = (((col_mur)//2)+1)*Affichage.CARTE.taille_piece[0] + Affichage.CARTE.coords.xi
+                    y_mur = (((ligne_mur)//2))*Affichage.CARTE.taille_piece[1] + Affichage.CARTE.coords.yi
 
-                    pygame.draw.rect(Affichage.ECRAN, (0,255,0), (x_mur, y_mur, largeur, hauteur))
+                    pygame.draw.rect(Affichage.ECRAN, (0,0,0), (x_mur, y_mur, largeur, hauteur))
                     
         #horizontal
-        for i_mur in range(1,len(self.carte), 2):
-            for j_mur in range(0,len(self.carte[0]),2):
-                if self.carte[i_mur][j_mur]:
+        for col_mur in range(0,len(self.carte),2):
+            for ligne_mur in range(1,len(self.carte[0]),2):
+                if self.carte[col_mur][ligne_mur]:
                     largeur=Affichage.CARTE.taille_piece[0]
                     hauteur=Affichage.CARTE.taille_piece[1]//10
 
-                    x_mur = (((j_mur)//2))*Affichage.CARTE.taille_piece[0] + Affichage.CARTE.coords.xi
-                    y_mur = (((i_mur)//2)+1)*Affichage.CARTE.taille_piece[1] + Affichage.CARTE.coords.yi
-
-                    pygame.draw.rect(Affichage.ECRAN, (0,255,0), (x_mur, y_mur, largeur, hauteur))
+                    x_mur = (((col_mur)//2))*Affichage.CARTE.taille_piece[0] + Affichage.CARTE.coords.xi
+                    y_mur = (((ligne_mur)//2)+1)*Affichage.CARTE.taille_piece[1] + Affichage.CARTE.coords.yi
+                    pygame.draw.rect(Affichage.ECRAN, (0,0,0), (x_mur, y_mur, largeur, hauteur))

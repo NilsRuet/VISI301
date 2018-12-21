@@ -57,8 +57,8 @@ class CarteUnePiece:
             if 0<=i_mur<labyF.taille and 0<=j_mur<labyF.taille:
                 if not labyF.carte[i_mur][j_mur]:
                     numPieceSuiv = labyF.carte[i_mur+coords_murs[0]][j_mur+coords_murs[1]].zone
-                    x_case = round(((coords_murs[1]+1)/2)*(OptJeu.NB_CASES-1))
-                    y_case = round(((coords_murs[0]+1)/2)*(OptJeu.NB_CASES-1))
+                    x_case = round(((coords_murs[0]+1)/2)*(OptJeu.NB_CASES-1))
+                    y_case = round(((coords_murs[1]+1)/2)*(OptJeu.NB_CASES-1))
                     #Méthode temporaire de génération des murs
                     self.carte[x_case][y_case].typeCase = -numPieceSuiv
         
