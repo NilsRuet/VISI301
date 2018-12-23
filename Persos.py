@@ -1,5 +1,7 @@
 import pygame
+import time
 from Affichage import *
+
 
 class Perso():
     def __init__(self,x,y,width,height):
@@ -8,7 +10,9 @@ class Perso():
         self.direction = [0,0]
         self.width = width
         self.height = height
-        self.vitesse = 5
+        self.last_mvt = time.time()
+        #stockage du temps du dernier mouvement pour gestion de la vitesse de dépacement
+        self.vitesse = 0.5 #nombre de secondes entre chaque déplacement
 
     def affichage(self):
         rectangle = (self.x*Affichage.JEU.taille_case[0] + Affichage.JEU.coords.xi, self.y*Affichage.JEU.taille_case[1] + Affichage.JEU.coords.yi, self.width, self.height)
