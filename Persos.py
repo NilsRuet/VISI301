@@ -12,7 +12,7 @@ class Perso():
         self.height = height
         self.last_mvt = time.time()
         #stockage du temps du dernier mouvement pour gestion de la vitesse de dépacement
-        self.vitesse = 0.5 #nombre de secondes entre chaque déplacement
+        self.vitesse = 0.1 #nombre de secondes entre chaque déplacement
 
     def affichage(self):
         rectangle = (self.x*Affichage.JEU.taille_case[0] + Affichage.JEU.coords.xi, self.y*Affichage.JEU.taille_case[1] + Affichage.JEU.coords.yi, self.width, self.height)
@@ -22,6 +22,8 @@ class Perso():
         autoriser_mouvement = True
         dx=self.direction[0]
         dy=self.direction[1]
+        
+        #Gestion des collisions
         if not 0 <= self.x+dx < nb_cases:
             autoriser_mouvement = False
             
@@ -34,10 +36,15 @@ class Perso():
 
             if piece[self.x+dx][self.y+dy].typeCase<0:
                 self.piece_actuelle = -piece[self.x+dx][self.y+dy].typeCase
-        
+                
+        #Gestion de la vitesse de déplacement
+        if (time.time() - self.last_mvt) < self.vitesse:
+            autoriser_mouvement = False
+
         if autoriser_mouvement:
              self.y = self.y + dy
              self.x = self.x + dx
+             self.last_mvt = time.time()
 
     def sortie_atteinte(self, num_sortie):
         return self.piece_actuelle==num_sortie

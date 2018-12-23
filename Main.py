@@ -35,23 +35,21 @@ while continuer :
             continuer = False
         if event.type == pygame.KEYDOWN:
             touche_move = False
-            if (time.time() - perso.last_mvt) > perso.vitesse:
-                if event.key == pygame.K_LEFT:
-                    perso.direction = [-1,0]
-                    touche_move = True
-                if event.key == pygame.K_RIGHT:
-                    perso.direction = [1,0]
-                    touche_move = True
-                if event.key == pygame.K_UP:
-                    perso.direction = [0,-1]
-                    touche_move = True
-                if event.key == pygame.K_DOWN:
-                    perso.direction = [0,1]
-                    touche_move = True
+            if event.key == pygame.K_LEFT:
+                perso.direction = [-1,0]
+                touche_move = True
+            if event.key == pygame.K_RIGHT:
+                perso.direction = [1,0]
+                touche_move = True
+            if event.key == pygame.K_UP:
+                perso.direction = [0,-1]
+                touche_move = True
+            if event.key == pygame.K_DOWN:
+                perso.direction = [0,1]
+                touche_move = True
                 
             if touche_move:
                 perso.move(OptJeu.NB_CASES,CarteUnePiece.cartesChargees[perso.piece_actuelle].carte)
-                perso.last_mvt = time.time()
                 
     Piece.listePieces[perso.piece_actuelle].revele(laby)
     redrawGameWindow()
