@@ -1,6 +1,5 @@
 import pygame
 import random
-import time
 
 from Options import *
 from Piece import *
