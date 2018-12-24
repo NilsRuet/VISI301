@@ -11,6 +11,7 @@ pygame.init()
 
 def redrawGameWindow():
     CarteUnePiece.cartesChargees[perso.piece_actuelle].affiche_carte()
+    CarteUnePiece.cartesChargees[perso.piece_actuelle].affiche_ennemis()
     perso.affichage()
     laby.affiche_lab((Piece.listePieces[perso.piece_actuelle].i, Piece.listePieces[perso.piece_actuelle].j))
     pygame.display.update()
@@ -25,31 +26,40 @@ Piece.initListePieces(laby)
 perso = Joueur(0,0,Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1],laby.depart)
 Piece.listePieces[perso.piece_actuelle].revele(laby)
 
+touche_move = False
+
 while continuer :
-
-
-    #events
     for event in pygame.event.get() :
         #Fermeture de la fenêtre
         if event.type == pygame.QUIT:
             continuer = False
         if event.type == pygame.KEYDOWN:
-            touche_move = False
             if event.key == pygame.K_LEFT:
-                perso.direction = [-1,0]
+                perso.direction = "GAUCHE"
                 touche_move = True
             if event.key == pygame.K_RIGHT:
-                perso.direction = [1,0]
+                perso.direction = "DROITE"
                 touche_move = True
             if event.key == pygame.K_UP:
-                perso.direction = [0,-1]
+                perso.direction = "HAUT"
                 touche_move = True
             if event.key == pygame.K_DOWN:
-                perso.direction = [0,1]
+                perso.direction = "BAS"
                 touche_move = True
+
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT and perso.direction == "GAUCHE":           
+                touche_move = False
+            if event.key == pygame.K_RIGHT and perso.direction == "DROITE":               
+                touche_move = False
+            if event.key == pygame.K_UP and perso.direction == "HAUT":              
+                touche_move = False
+            if event.key == pygame.K_DOWN and perso.direction == "BAS":               
+                touche_move = False
+            
                 
-            if touche_move:
-                perso.move(OptJeu.NB_CASES,CarteUnePiece.cartesChargees[perso.piece_actuelle].carte)
+    if touche_move:
+        perso.move(CarteUnePiece.cartesChargees[perso.piece_actuelle].carte)
                 
     Piece.listePieces[perso.piece_actuelle].revele(laby)
     redrawGameWindow()

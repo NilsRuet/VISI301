@@ -1,6 +1,8 @@
 import pygame
+import random
 from Affichage import *
 from Options import *
+from Persos import *
 
 class Piece:
     listePieces={}
@@ -17,31 +19,54 @@ class Piece:
         #Generation temporaire de la carte globale
         for i in range(0,labyF.taille, 2):
             for j in range(0,labyF.taille, 2):
-                Piece.listePieces[labyF.carte[i][j].zone] = Piece(labyF.carte[i][j].zone,"type_test", i, j)
+                rndm_type = random.random()
+                if rndm_type<=0.5:
+                    typePiece = "ennemis"
+                elif rndm_type<=0.8:
+                    typePiece = "grille"
+                else:
+                    typePiece = "vide"           
+                Piece.listePieces[labyF.carte[i][j].zone] = Piece(labyF.carte[i][j].zone,typePiece, i, j)
 
 
     def revele(self, labyF):
         if not self.numPiece in CarteUnePiece.cartesChargees:
-            CarteUnePiece(self.numPiece,labyF)
+            CarteUnePiece(self.numPiece,labyF, self.typePiece)
             self.vue=True;
 
 class CarteUnePiece:
     cartesChargees = {}
-    def __init__(self, numPieceF,labyF):
+    def __init__(self,numPieceF,labyF, typePiece):
     #constructeur
         self.numPiece=numPieceF
-
+        self.ennemis=[]
         #On initialise un tableau de NB_CASES*NB_CASES qui sera remplit de cases
         self.carte=[[0]]*OptJeu.NB_CASES
         for colonne in range(len(self.carte)):
             self.carte[colonne]=[0]*OptJeu.NB_CASES
-        #Ici, initialisé avec des 0 dans toutes les cellules parce que je ne sais pas comment initialiser une liste vide
-            
-        for colonne in range(len(self.carte)):
-            for ligne in range(len(self.carte[0])):
-                self.carte[colonne][ligne] = Case(1)
-                #Chaque cellule de la carte est une case
-                #Ici, pour l'exemple, on appelle le constructeur de la case avec 0 ou 1
+        #Ici, initialisé avec des 0 dans toutes les cellules par défaut
+
+        if typePiece=="ennemis":
+            for colonne in range(len(self.carte)):
+                for ligne in range(len(self.carte[0])):
+                    self.carte[colonne][ligne] = Case(1)
+                    if random.random()<=0.01:
+                        self.ennemis.append(Ennemi(colonne, ligne, 10, 10))
+                        #Modèle ennemi temporaire TODO
+                        
+        elif typePiece=="grille":
+            for colonne in range(len(self.carte)):
+                for ligne in range(len(self.carte[0])):
+                    if colonne%2 == 1 and ligne%2 == 1:
+                        self.carte[colonne][ligne] = Case(0)
+                    else:
+                        self.carte[colonne][ligne] = Case(1)
+        else:
+            for colonne in range(len(self.carte)):
+                for ligne in range(len(self.carte[0])):
+                    self.carte[colonne][ligne] = Case(1)
+                    #Chaque cellule de la carte est une case
+                    #Ici, pour l'exemple, on appelle le constructeur de la case avec 0 ou 1
 
         #Lecture des murs
         self.creer_portes(labyF)
@@ -67,6 +92,10 @@ class CarteUnePiece:
         for colonne in range(len(self.carte)):
             for ligne in range(len(self.carte[0])):
                 self.carte[colonne][ligne].affiche_case(colonne, ligne)
+
+    def affiche_ennemis(self):
+        for ennemi in self.ennemis:
+            ennemi.affiche()
 
 class Case:
     def __init__(self, typeCaseF):
