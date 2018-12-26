@@ -1,5 +1,4 @@
 import pygame
-import time
 from Options import *
 from Affichage import *
 from Piece import *
