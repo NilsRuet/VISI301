@@ -47,32 +47,42 @@ class CarteUnePiece:
         #Ici, initialisé avec des 0 dans toutes les cellules par défaut
 
         if typePiece=="ennemis":
-            for colonne in range(len(self.carte)):
-                for ligne in range(len(self.carte[0])):
-                    self.carte[colonne][ligne] = Case(1)
-                    if random.random()<=0.01:
-                        self.ennemis.append(Ennemi(colonne, ligne, 10, 10))
-                        #Modèle ennemi temporaire TODO
+            self.init_piece_ennemis()
                         
         elif typePiece=="grille":
-            for colonne in range(len(self.carte)):
-                for ligne in range(len(self.carte[0])):
-                    if colonne%2 == 1 and ligne%2 == 1:
-                        self.carte[colonne][ligne] = Case(0)
-                    else:
-                        self.carte[colonne][ligne] = Case(1)
+            self.init_piece_grille()
         else:
-            for colonne in range(len(self.carte)):
-                for ligne in range(len(self.carte[0])):
-                    self.carte[colonne][ligne] = Case(1)
-                    #Chaque cellule de la carte est une case
-                    #Ici, pour l'exemple, on appelle le constructeur de la case avec 0 ou 1
-
-        #Lecture des murs
+            self.init_piece_vide()
+            
         self.creer_portes(labyF)
         
         CarteUnePiece.cartesChargees[self.numPiece]=self
-        
+
+    def init_piece_ennemis(self):
+        for colonne in range(len(self.carte)):
+            for ligne in range(len(self.carte[0])):
+                self.carte[colonne][ligne] = Case(1, False)
+                if random.random()<=0.01:
+                    self.ennemis.append(Ennemi(colonne, ligne))
+                    #Modèle ennemi temporaire TODO
+
+    def init_piece_grille(self):
+        for colonne in range(len(self.carte)):
+            for ligne in range(len(self.carte[0])):
+                if colonne%2 == 1 and ligne%2 == 1:
+                    self.carte[colonne][ligne] = Case(0, True)
+                else:
+                    self.carte[colonne][ligne] = Case(1, False)
+
+    def init_piece_vide(self):
+        for colonne in range(len(self.carte)):
+            for ligne in range(len(self.carte[0])):
+                self.carte[colonne][ligne] = Case(1, False)
+                #Chaque cellule de la carte est une case
+                #Ici, pour l'exemple, on appelle le constructeur de la case avec 0 ou 1
+
+
+                        
     def creer_portes(self, labyF):
         i_piece = Piece.listePieces[self.numPiece].i
         j_piece = Piece.listePieces[self.numPiece].j
@@ -86,7 +96,11 @@ class CarteUnePiece:
                     y_case = round(((coords_murs[1]+1)/2)*(OptJeu.NB_CASES-1))
                     #Méthode temporaire de génération des murs
                     self.carte[x_case][y_case].typeCase = -numPieceSuiv
-        
+
+    def bouger_ennemis(self, joueur):
+        for ennemi in self.ennemis:
+            ennemi.move(self, joueur)
+            
     def affiche_carte(self):
         #Méthode d'affichage de la grille
         for colonne in range(len(self.carte)):
@@ -98,9 +112,10 @@ class CarteUnePiece:
             ennemi.affiche()
 
 class Case:
-    def __init__(self, typeCaseF):
+    def __init__(self, typeCaseF, collisionF):
         self.typeCase = typeCaseF
-
+        self.collision = collisionF
+          
     def affiche_case(self, colonneF, ligneF):
         #Pour l'instant on affiche un rectangle d'une certaine couleur pour représenter la case
         hauteur, largeur = Affichage.JEU.taille_case[0], Affichage.JEU.taille_case[1]

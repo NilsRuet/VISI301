@@ -56,10 +56,12 @@ while continuer :
                 touche_move = False
             if event.key == pygame.K_DOWN and perso.direction == "BAS":               
                 touche_move = False
+
             
-                
+    CarteUnePiece.cartesChargees[perso.piece_actuelle].bouger_ennemis(perso)       
     if touche_move:
-        perso.move(CarteUnePiece.cartesChargees[perso.piece_actuelle].carte)
+        perso.move(CarteUnePiece.cartesChargees[perso.piece_actuelle])
+    
                 
     Piece.listePieces[perso.piece_actuelle].revele(laby)
     redrawGameWindow()
