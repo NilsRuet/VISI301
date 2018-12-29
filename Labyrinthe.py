@@ -1,25 +1,35 @@
+###########################################################################
+# Fichiers contenant les classes de génération et d'affichage du labyrinthe
+
 import random
 from Affichage import *
 
 class Zone:
+    #Classe représentant une "case" du labyrinthe, permet de facilement lier des cases entre elles
     nb=0
     def __init__(self):
         Zone.nb+=1
         self.zone = Zone.nb
+        #Numero de la case
         self.suiv=None
-
+        #Case à laquelle est rattaché cette case
+        
     def devient(self, nv_zone):
+        #Méthode permettant de lier deux zones du labyrinthe
         parcours_anc_val=self
         parcours_nv_val=nv_zone
+        
         while not parcours_nv_val.suiv is None:
             parcours_nv_val=parcours_nv_val.suiv
-
         while not parcours_anc_val.suiv is None:
             parcours_anc_val=parcours_anc_val.suiv
-
+        #On trouve les cases "finales" auxquelles sont rattachées les cases à fusionner
+            
         parcours_anc_val.suiv=parcours_nv_val
+        #la case finale d'une des deux cases est rattachée à la case finale de l'autre case
 
     def get_zone(self):
+        #Méthode permettant de retrouver la valeur de la case finale à laquelle est rattachée une case
         parcours = self
         while not parcours.suiv is None:
             parcours=parcours.suiv
@@ -27,10 +37,7 @@ class Zone:
 
 
 class Labyrinthe:
-    def brisable(self, salle1, salle2):
-        num1 = self.carte[salle1[0]][salle1[1]].get_zone()
-        num2 = self.carte[salle2[0]][salle2[1]].get_zone()
-        return num1!=num2
+    #Classe représentant un labyrinthe
     
     def __init__(self, taille):
         self.carte=["+"]*(2*taille-1)
@@ -95,9 +102,17 @@ class Labyrinthe:
         self.arrivee = random.randint(1,Zone.nb)
         while self.arrivee==self.depart:
             self.arrivee = random.randint(1,Zone.nb)
+        #On choisit au hasard deux cases du labyrinthe différentes qui seront l'arrivée et le départ
             
-
+    def brisable(self, salle1, salle2):
+        #Méthode permettant de savoir si deux salles n'appartiennent pas à la même zone
+        #donc si le mur entre ces deux salles peut etre briser sans créer de boucle
+        num1 = self.carte[salle1[0]][salle1[1]].get_zone()
+        num2 = self.carte[salle2[0]][salle2[1]].get_zone()
+        return num1!=num2
+    
     def print_lab(self, piece_actu=(0,0)):
+        #Méthode permettant l'affichage du labyrinthe dans la console
         print("-"*(len(self.carte)*2+3))
         for i in range(len(self.carte)):
             ligne="| "
@@ -121,49 +136,67 @@ class Labyrinthe:
         print("-"*(len(self.carte)*2+3))
 
     def affiche_lab(self, piece_actu=(0,0)):
-        #Pièces
+        #Méthode d'affichage du labyrinthe dans une fenêtre
+        
+        #Affichage des pièces
         for col_lab in range(0,len(self.carte),2):
             for ligne_lab in range(0,len(self.carte[0]),2):
                 col = col_lab//2
                 ligne = ligne_lab//2
+                #Pour chaque pièce, on retrouve ses coordonnées relatives aux autres pièces (en ignorant les murs)
                 
                 largeur=Affichage.CARTE.taille_piece[0]
                 hauteur=Affichage.CARTE.taille_piece[1]
+                #On définit les dimensions d'une pièce
                 
                 x_piece=Affichage.CARTE.coords.xi + (col)*largeur
                 y_piece=Affichage.CARTE.coords.yi + (ligne)*hauteur
+                #On définit les coordonnée et la taille de la pièces à afficher
+                
                 if col_lab==piece_actu[0] and ligne_lab==piece_actu[1]:
-                    #piece_actuelle
+                    #Affichage de la pièce dans laquelle se trouve le personnage
                     pygame.draw.rect(Affichage.ECRAN, (200,200,200), (x_piece, y_piece, largeur, hauteur))
                     
                 elif self.carte[col_lab][ligne_lab].zone == self.depart:
-                    #depart
+                    #Affichage de la pièce de départ (bleue)
                     pygame.draw.rect(Affichage.ECRAN, (0,0,255), (x_piece, y_piece, largeur, hauteur))
+                    
                 elif self.carte[col_lab][ligne_lab].zone  == self.arrivee:
-                    #arrivee
+                    #Affichage de la pièce d'arrivée (rouge)
                     pygame.draw.rect(Affichage.ECRAN, (255,0,0), (x_piece, y_piece, largeur, hauteur))
                     
                 else:
+                    #Affichage d'une pièce sans particularité
                     pygame.draw.rect(Affichage.ECRAN, (255,255,255), (x_piece, y_piece, largeur, hauteur))
-        #vertical
+                    
+        #Affichage des murs verticaux
         for col_mur in range(1,len(self.carte), 2):
             for ligne_mur in range(0,len(self.carte[0]),2):
                 if self.carte[col_mur][ligne_mur]:
+                    #On sélectionne chaque mur vertical (x impair, y pair dans le labyrinthe)
+                    
                     largeur=Affichage.CARTE.taille_piece[0]//10
                     hauteur=Affichage.CARTE.taille_piece[1]
+                    #On définit les dimension du mur           
 
                     x_mur = (((col_mur)//2)+1)*Affichage.CARTE.taille_piece[0] + Affichage.CARTE.coords.xi
                     y_mur = (((ligne_mur)//2))*Affichage.CARTE.taille_piece[1] + Affichage.CARTE.coords.yi
+                    #On définit les coordonnées du mur
 
                     pygame.draw.rect(Affichage.ECRAN, (0,0,0), (x_mur, y_mur, largeur, hauteur))
                     
-        #horizontal
+        #Affichage des murs horizontaux
         for col_mur in range(0,len(self.carte),2):
             for ligne_mur in range(1,len(self.carte[0]),2):
                 if self.carte[col_mur][ligne_mur]:
+                    #On sélectionne chaque mur horizontal (x pair, y impair dans le labyrinthe)
+                    
                     largeur=Affichage.CARTE.taille_piece[0]
                     hauteur=Affichage.CARTE.taille_piece[1]//10
-
+                    #On définit les dimension du mur
+                    
                     x_mur = (((col_mur)//2))*Affichage.CARTE.taille_piece[0] + Affichage.CARTE.coords.xi
                     y_mur = (((ligne_mur)//2)+1)*Affichage.CARTE.taille_piece[1] + Affichage.CARTE.coords.yi
+                    #On définit les coordonnées du mur
+                    
                     pygame.draw.rect(Affichage.ECRAN, (0,0,0), (x_mur, y_mur, largeur, hauteur))
