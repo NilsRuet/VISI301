@@ -46,6 +46,7 @@ class Joueur(Perso):
     
     def case_valide(x, y, piece):
         #Méthode vérifiant si le joueur peut aller sur une case
+        #A déplacer vers la classe Perso pour éviter que le stack des ennemis ?
         
         est_ennemi = False
         i=0

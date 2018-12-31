@@ -103,6 +103,7 @@ class Labyrinthe:
         while self.arrivee==self.depart:
             self.arrivee = random.randint(1,Zone.nb)
         #On choisit au hasard deux cases du labyrinthe différentes qui seront l'arrivée et le départ
+        #Modifications à faire pour choisir 2 cases assez éloignées l'une de l'autre
             
     def brisable(self, salle1, salle2):
         #Méthode permettant de savoir si deux salles n'appartiennent pas à la même zone
