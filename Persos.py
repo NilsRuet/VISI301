@@ -35,6 +35,13 @@ class Perso():
         else:
             if piece.carte[x][y].collision: 
                 autoriser_mouvement = False
+        
+        #On vérifie que la case ne contient pas un ennemi
+        i=0
+        while i<len(piece.ennemis) and autoriser_mouvement:
+            autoriser_mouvement = not (piece.ennemis[i].x==x and piece.ennemis[i].y==y)
+            i+=1
+            
         return autoriser_mouvement
 
 class Joueur(Perso):
@@ -43,24 +50,11 @@ class Joueur(Perso):
     VIE_DEPART=100
     VITESSE=100
     #Vie de départ du joueur
-    
-    def case_valide(x, y, piece):
-        #Méthode vérifiant si le joueur peut aller sur une case
-        #A déplacer vers la classe Perso pour éviter que le stack des ennemis ?
-        
-        est_ennemi = False
-        i=0
-        #On vérifie que la case ne contient pas un ennemi
-        while i<len(piece.ennemis) and not est_ennemi:
-            est_ennemi = (piece.ennemis[i].x==x and piece.ennemis[i].y==y)
-            i+=1
 
-        #En plus de la vérification faite pour tous les personnages mobiles, on vérifie que la case ne contient pas d'ennemi.
-        return Perso.case_valide(x, y, piece) and not est_ennemi
-    
     def __init__(self,x,y,width,height,pieceF=1):
         Perso.__init__(self,x,y,width,height,Joueur.VITESSE)
         #Un joueur les mêmes caractéristiques que tous les personages mobiles
+        self.max_vie = Joueur.VIE_DEPART
         self.vie = Joueur.VIE_DEPART
         #En plus d'un nombre de points de vie
         self.piece_actuelle = pieceF
@@ -99,20 +93,42 @@ class Joueur(Perso):
         #Méthode qui détecte si le joueur a atteint la sortie du labyrinthe
         return self.piece_actuelle==num_sortie
 
+    def affichage_vie(self):
+        rect_vie=(Affichage.VIE.coords.xi, Affichage.VIE.coords.yi, int(Affichage.VIE.largeur*(self.vie/self.max_vie)), Affichage.VIE.hauteur)
+        pygame.draw.rect(Affichage.ECRAN, (0, 127, 0), rect_vie)
+        
     def affichage(self):
         #Méthode d'affichage du joueur
         rectangle = (self.x*Affichage.JEU.taille_case[0] + Affichage.JEU.coords.xi, self.y*Affichage.JEU.taille_case[1] + Affichage.JEU.coords.yi, self.width, self.height)
         pygame.draw.rect(Affichage.ECRAN, (255, 0, 0), rectangle)
+    
 
 class Ennemi(Perso):
     #Classe représentant un ennemi, qui attaque le joueur
     VIE_DEPART=10
+    ATTAQUE=10
+    VITESSE_ATTAQUE=1000
     VITESSE=500
+    def case_valide(x,y,piece,joueur):
+        #Gestion du déplacement d'un ennemi
+        return Perso.case_valide(x,y,piece) and not (joueur.x == x and joueur.y == y)
+        #Même conditions que tous les personnages mobiles, mais ne peut pas aller sur la même case qu'un joueur
+
+    
     def __init__(self,x,y,width=Affichage.JEU.taille_case[0],height=Affichage.JEU.taille_case[1]):
         #Création d'un ennemi, avec des valeurs par défaut pour la largeur et la hauteur
         
         Perso.__init__(self,x,y,width,height,Ennemi.VITESSE)
         self.vie = Ennemi.VIE_DEPART
+        self.attaque = Ennemi.ATTAQUE
+        self.vitesse_attaque = Ennemi.VITESSE_ATTAQUE
+        self.last_attaque = 0
+
+    def action(self, piece, joueur):
+        #Gestionnaire des actions réalisées par un ennemi
+        self.attaquer(joueur)
+        self.move(piece, joueur)
+        
 
     def move(self,piece, joueur):
         #Méthode bougeant si possible l'ennemi vers le joueur
@@ -124,12 +140,19 @@ class Ennemi(Perso):
 
         #On réduit la distance en x si elle est plus élevée que celle en y, et inversement
         if abs(distance_x)>abs(distance_y):
-            dx = round(distance_x/abs(distance_x))
+            if distance_x == 0:
+                #TODO ce test existe car la génération actuelle des ennemis a une probabilité d'en créer un sous le joueur
+                dx=0
+            else:                   
+                dx = round(distance_x/abs(distance_x))
             dy = 0
         else:
             dx = 0
-            dy = round(distance_y/abs(distance_y))
-            
+            if distance_y==0:
+                dy=0
+            else:
+                dy = round(distance_y/abs(distance_y))
+
         #Gestion de la vitesse de déplacement
         if (pygame.time.get_ticks() - self.last_mvt) < self.vitesse:
             autoriser_mouvement = False       
@@ -144,10 +167,12 @@ class Ennemi(Perso):
             self.y = self.y + dy             
             self.last_mvt = pygame.time.get_ticks()
 
-    def case_valide(x,y,piece,joueur):
-        #Gestion du déplacement d'un ennemi
-        return Perso.case_valide(x,y,piece) and not (joueur.x == x and joueur.y == y)
-        #Même conditions que tous les personnages mobiles, mais ne peut pas aller sur la même case qu'un joueur
+    def attaquer(self, joueur):
+        if (joueur.x-self.x,joueur.y-self.y) in ((0,1),(0,-1),(1,0),(-1,0)):
+            #Si le joueur est sur une case adjacente
+            if not ((pygame.time.get_ticks() - self.last_attaque) < self.vitesse_attaque):
+                joueur.vie-=self.attaque
+                self.last_attaque = pygame.time.get_ticks()
 
     def affiche(self):
         #Méthode d'affichage d'un ennemi

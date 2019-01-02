@@ -14,10 +14,21 @@ pygame.init()
 
 def redrawGameWindow():
     #Procedure gérant l'ordre d'affichage des éléments
+
+    Affichage.ECRAN.fill((0,0,0))
+    #On efface ce qui est déjà affiché = tout l'écran de jeu devient noir 
+    
     CarteUnePiece.cartesChargees[perso.piece_actuelle].affiche_carte()
     CarteUnePiece.cartesChargees[perso.piece_actuelle].affiche_ennemis()
     perso.affichage()
+    #Affichage de la pièce et de ses éléments
+    
+    perso.affichage_vie()
+    #Affichage de la vie du personnage
+    
     laby.affiche_lab((Piece.listePieces[perso.piece_actuelle].i, Piece.listePieces[perso.piece_actuelle].j))
+    #Affichage de la carte du labyrinthe
+
     pygame.display.update()
 
 ####################################################################################
@@ -70,7 +81,7 @@ while continuer :
                 touche_move = False
 
             
-    CarteUnePiece.cartesChargees[perso.piece_actuelle].bouger_ennemis(perso)
+    CarteUnePiece.cartesChargees[perso.piece_actuelle].action_ennemis(perso)
     #On bouge les ennemis de la pièce actuelle
     
     if touche_move:
@@ -83,6 +94,11 @@ while continuer :
     redrawGameWindow()
     #On affiche tout
     
+    if perso.vie==0:
+        #Détection défaite, si le joueur n'a plus de vie
+        print("Perdu")
+        continuer=False
+        
     if perso.sortie_atteinte(laby.arrivee):
         #Détection de l'arrivée dans la pièce finale du labyrinthe
         print("Gagné!")

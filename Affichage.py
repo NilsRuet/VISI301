@@ -28,10 +28,16 @@ class Affichage_carte:
         #Coordonnées "de départ" pour afficher la carte
         self.taille_piece = taille_pieceF
         #Taille des cases de la carte
+
+class Affichage_vie:
+    def __init__(self, coordsF, largeurF, hauteurF):
+        self.coords = coordsF
+        self.largeur = largeurF
+        self.hauteur = hauteurF
         
 class Affichage:
     #Initialisation de la fenêtre
-    TAILLE_ECRAN = (1000, 500) #largeur / hauteur
+    TAILLE_ECRAN = (1000, 600) #largeur / hauteur
     ECRAN = pygame.display.set_mode(TAILLE_ECRAN)
 
     #Initialisation des caractéristiques d'affichage du jeu                       
@@ -48,4 +54,13 @@ class Affichage:
     #La taille d'une case est prévue pour que l'affichage de la carte se fasse sur une moitié horizontale de la fenêtre
     CARTE = Affichage_carte(Coords(X_CARTE, Y_CARTE), (largeur_piece,largeur_piece))
 
+    #Initialisation de l'affichage de la vie du personnage
+    X_VIE=0
+    Y_VIE=Y_JEU+largeur_case*OptJeu.NB_CASES+10
+    #Ici l'affichage se fait juste en dessous de la fenêtre de jeu
+    largeur = largeur_case*OptJeu.NB_CASES
+    hauteur = largeur_case//4
+
+    VIE=Affichage_vie(Coords(X_VIE, Y_VIE), largeur, hauteur)
+    
     

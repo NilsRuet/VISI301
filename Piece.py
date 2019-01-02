@@ -27,7 +27,7 @@ class Piece:
             for j in range(0,labyF.taille, 2):
                 #Pour chaque pièce
                 rndm_type = random.random()
-                if rndm_type<=0.1:
+                if rndm_type<=1:
                     typePiece = "ennemis"
                 elif rndm_type<=0.5:
                     typePiece = "grille"
@@ -150,10 +150,10 @@ class CarteUnePiece:
                     self.carte[x_case][y_case].collision = False
                     #On crée la porte dans la pièce, avec une case dont la valeur est négative. Cette valeur indique le numéro de la pièce vers laquelle la porte mène.
 
-    def bouger_ennemis(self, joueur):
+    def action_ennemis(self, joueur):
         #Méthode appelée pour faire bouger tous les ennemis d'une pièce
         for ennemi in self.ennemis:
-            ennemi.move(self, joueur)
+            ennemi.action(self, joueur)
             
     def affiche_carte(self):
         #Méthode d'affichage de la carte de la pièce
