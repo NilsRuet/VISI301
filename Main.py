@@ -3,7 +3,6 @@
 # A executer pour lancer le jeu
 
 import pygame
-import random
 
 from Options import *
 from Piece import *
