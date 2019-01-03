@@ -27,11 +27,11 @@ class Piece:
             for j in range(0,labyF.taille, 2):
                 #Pour chaque pièce
                 rndm_type = random.random()
-                if rndm_type<=1:
+                if rndm_type<=0.7:
                     typePiece = "ennemis"
-                elif rndm_type<=0.5:
+                elif rndm_type<=0.9:
                     typePiece = "grille"
-                elif rndm_type<=0.7:
+                elif rndm_type<=1:
                     typePiece = "test_fichier"
                 else:
                     typePiece = "vide"
@@ -52,8 +52,9 @@ class CarteUnePiece:
     
     def __init__(self,numPieceF,labyF, typePiece):
         self.numPiece=numPieceF
-        self.ennemis=[]
-        #On initialise un tableau de NB_CASES*NB_CASES qui sera remplit d'objets case
+
+        
+        self.ennemis={}
         
         self.carte=[]
         for colonne in range(OptJeu.NB_CASES):
@@ -61,6 +62,7 @@ class CarteUnePiece:
             for ligne in range(OptJeu.NB_CASES):
                 cases_colonne.append(Case(1,False))
             self.carte.append(cases_colonne)
+        #On initialise un tableau de NB_CASES*NB_CASES qui sera remplit d'objets case
         #Ici, initialisé avec des cases vides dans toutes les cellules par défaut
 
         if typePiece=="ennemis":
@@ -104,7 +106,7 @@ class CarteUnePiece:
             for ligne in range(len(self.carte[0])):
                 self.carte[colonne][ligne] = Case(1, False)
                 if random.random()<=0.01:
-                    self.ennemis.append(Ennemi(colonne, ligne))
+                    self.ennemis[colonne, ligne] = Ennemi(colonne, ligne, self)
                     #Modèle ennemi temporaire
 
     def init_piece_grille(self):
@@ -152,8 +154,8 @@ class CarteUnePiece:
 
     def action_ennemis(self, joueur):
         #Méthode appelée pour faire bouger tous les ennemis d'une pièce
-        for ennemi in self.ennemis:
-            ennemi.action(self, joueur)
+        for coords_ennemi in self.ennemis:
+            self.ennemis[coords_ennemi].action(joueur)
             
     def affiche_carte(self):
         #Méthode d'affichage de la carte de la pièce
@@ -163,8 +165,8 @@ class CarteUnePiece:
 
     def affiche_ennemis(self):
         #Méthode d'affichage des ennemis situés dans la pièce
-        for ennemi in self.ennemis:
-            ennemi.affiche()
+        for coords_ennemi in self.ennemis:
+            self.ennemis[coords_ennemi].affiche()
 
 class Case:
     #Classe contenant les informations d'une case dans une pièce

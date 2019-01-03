@@ -10,7 +10,7 @@ Dans la partie de droite, des murs sont représentés par des traits noirs et empê
 Lorsque le joueur a réussi à se déplacer dans la pièce finale, il gagne et la fenêtre se ferme.
 
 Fichiers du projet :
-"Labyrinthe.py", "Persos.py", "Piece.py" contiennent (respectivement) les classes d'objets relatifs au labyrinthe, aux personnages, aux pièces du labyrinthe
+"Labyrinthe.py", "Persos.py", "Piece.py", "Armes.py" contiennent (respectivement) les classes d'objets relatifs au labyrinthe, aux personnages, aux pièces du labyrinthe, aux armes existant dans le jeu
 "Options.py" contient les paramètres du jeu (par exemple la taille du labyrinthe).
 "Affichage.py" contient les paramètres de l'affichage (Taille de la fenêtre, position des éléments sur la fenêtres etc.).
 "Main.py" contient la boucle principale du jeu et le gestionnaire d'évènements.

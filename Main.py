@@ -9,6 +9,8 @@ from Piece import *
 from Persos import *
 from Labyrinthe import *
 from Affichage import *
+from Armes import *
+
 pygame.init()
 
 def redrawGameWindow():
@@ -40,6 +42,9 @@ Piece.initListePieces(laby)
 #Génération de la carte
 
 perso = Joueur(0,0,Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1],laby.depart)
+perso.set_arme(Melee(perso, 10, 300))
+#Test d'une arme avec 10 d'attaque, attaque toutes les 0.3s
+
 Piece.listePieces[perso.piece_actuelle].revele(laby)
 #Génération du personnage et de la pièce de départ
 
@@ -66,6 +71,8 @@ while continuer :
             if event.key == pygame.K_DOWN:
                 perso.direction = "BAS"
                 touche_move = True
+            if event.key == pygame.K_r:
+                perso.attaquer()
 
         if event.type == pygame.KEYUP:
             #On lit les touches relâchées, pour arrêter un mouvement il faut que la direction du personnage

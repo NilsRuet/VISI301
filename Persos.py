@@ -2,6 +2,7 @@
 # Fichiers contenant les classes relatives aux personnages du jeu comme le joueur, les ennemis
 
 import pygame
+import random
 from Options import *
 from Affichage import *
 from Piece import *
@@ -23,6 +24,11 @@ class Perso():
         #Chaque personnage mobile possède des coordonnées dans une pièce, une direction, une largeur et une hauteur (affichage) (à déplacer)
         #On connaît moment où son dernier mouvement a été effectué ainsi que sa vitesse
 
+    def case_ennemi(x, y, piece):
+        #On vérifie que la case ne contient pas un ennemi
+        ennemi_trouve = False
+        return piece.ennemis.get((x,y)) != None
+        
     def case_valide(x, y, piece):
         #Méthode permettant de savoir si une case dans une pièce autorise des personnages à se déplacer dessus
         autoriser_mouvement=True
@@ -35,30 +41,30 @@ class Perso():
         else:
             if piece.carte[x][y].collision: 
                 autoriser_mouvement = False
-        
-        #On vérifie que la case ne contient pas un ennemi
-        i=0
-        while i<len(piece.ennemis) and autoriser_mouvement:
-            autoriser_mouvement = not (piece.ennemis[i].x==x and piece.ennemis[i].y==y)
-            i+=1
-            
+                
+        autoriser_mouvement = autoriser_mouvement and not Perso.case_ennemi(x, y, piece)    
         return autoriser_mouvement
 
 class Joueur(Perso):
     #Personnage joué par l'utilisateur
     
-    VIE_DEPART=100
+    VIE_DEPART=150
+    #Pour les tests
     VITESSE=100
     #Vie de départ du joueur
 
     def __init__(self,x,y,width,height,pieceF=1):
         Perso.__init__(self,x,y,width,height,Joueur.VITESSE)
-        #Un joueur les mêmes caractéristiques que tous les personages mobiles
+        #Un joueur a les mêmes types de caractéristiques que tous les personages mobiles
         self.max_vie = Joueur.VIE_DEPART
         self.vie = Joueur.VIE_DEPART
         #En plus d'un nombre de points de vie
         self.piece_actuelle = pieceF
         #Et du numéro de la pièce dans laquelle il se trouve
+        self.arme=None
+
+    def set_arme(self, armeF):
+        self.arme = armeF
     
     def move(self,piece):
         #Méthode permettant de bouger le personnage
@@ -96,7 +102,10 @@ class Joueur(Perso):
     def affichage_vie(self):
         rect_vie=(Affichage.VIE.coords.xi, Affichage.VIE.coords.yi, int(Affichage.VIE.largeur*(self.vie/self.max_vie)), Affichage.VIE.hauteur)
         pygame.draw.rect(Affichage.ECRAN, (0, 127, 0), rect_vie)
-        
+
+    def attaquer(self):
+        self.arme.attaquer()
+    
     def affichage(self):
         #Méthode d'affichage du joueur
         rectangle = (self.x*Affichage.JEU.taille_case[0] + Affichage.JEU.coords.xi, self.y*Affichage.JEU.taille_case[1] + Affichage.JEU.coords.yi, self.width, self.height)
@@ -105,17 +114,17 @@ class Joueur(Perso):
 
 class Ennemi(Perso):
     #Classe représentant un ennemi, qui attaque le joueur
-    VIE_DEPART=10
+    VIE_DEPART=20
     ATTAQUE=10
     VITESSE_ATTAQUE=1000
-    VITESSE=500
+    VITESSE=400
     def case_valide(x,y,piece,joueur):
         #Gestion du déplacement d'un ennemi
         return Perso.case_valide(x,y,piece) and not (joueur.x == x and joueur.y == y)
         #Même conditions que tous les personnages mobiles, mais ne peut pas aller sur la même case qu'un joueur
 
     
-    def __init__(self,x,y,width=Affichage.JEU.taille_case[0],height=Affichage.JEU.taille_case[1]):
+    def __init__(self,x,y,pieceF,width=Affichage.JEU.taille_case[0],height=Affichage.JEU.taille_case[1]):
         #Création d'un ennemi, avec des valeurs par défaut pour la largeur et la hauteur
         
         Perso.__init__(self,x,y,width,height,Ennemi.VITESSE)
@@ -123,14 +132,15 @@ class Ennemi(Perso):
         self.attaque = Ennemi.ATTAQUE
         self.vitesse_attaque = Ennemi.VITESSE_ATTAQUE
         self.last_attaque = 0
+        self.piece = pieceF
 
-    def action(self, piece, joueur):
+    def action(self, joueur):
         #Gestionnaire des actions réalisées par un ennemi
         self.attaquer(joueur)
-        self.move(piece, joueur)
+        self.move(joueur)
         
 
-    def move(self,piece, joueur):
+    def move(self, joueur):
         #Méthode bougeant si possible l'ennemi vers le joueur
         autoriser_mouvement = True
 
@@ -159,12 +169,17 @@ class Ennemi(Perso):
         
         else:
             #Gestion des collisions
-            autoriser_mouvement = Ennemi.case_valide(self.x+dx,self.y+dy,piece,joueur)
+            autoriser_mouvement = Ennemi.case_valide(self.x+dx,self.y+dy,self.piece,joueur)
             
         #Deplacement du personnage
         if autoriser_mouvement:
+            del self.piece.ennemis[self.x, self.y]
+            
             self.x = self.x + dx
-            self.y = self.y + dy             
+            self.y = self.y + dy
+            
+            self.piece.ennemis[self.x, self.y] = self
+                
             self.last_mvt = pygame.time.get_ticks()
 
     def attaquer(self, joueur):
@@ -174,7 +189,10 @@ class Ennemi(Perso):
                 joueur.vie-=self.attaque
                 self.last_attaque = pygame.time.get_ticks()
 
+    def meurt(self):
+        del self.piece.ennemis[self.x, self.y]
+
     def affiche(self):
         #Méthode d'affichage d'un ennemi
         rectangle = (self.x*Affichage.JEU.taille_case[0] + Affichage.JEU.coords.xi, self.y*Affichage.JEU.taille_case[1] + Affichage.JEU.coords.yi, self.width, self.height)
-        pygame.draw.rect(Affichage.ECRAN, (0, 127, 0), rectangle)
+        pygame.draw.rect(Affichage.ECRAN, (0,127,0), rectangle)
