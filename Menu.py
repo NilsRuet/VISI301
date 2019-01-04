@@ -12,9 +12,14 @@ class Bouton:
         self.y_bouton = y_bouton
         self.largeur = largeur
         self.hauteur = hauteur
+        self.estSelectionne = False #Booléen qui indique si le joueur à le sélecteur sur le bouton
 
     def affiche_bouton(self, fenetre):
         #méthode qui permet d'afficher le bouton sur l'écran
+        if self.estSelectionne:
+            pygame.draw.rect(fenetre, (0,255,0), (self.x_bouton-10,self.y_bouton-10,self.largeur+20,self.hauteur+20),0)
+            #On dessine un contour vert au bouton courant (rreprésentant rectangle de selection)
+            
         pygame.draw.rect(fenetre, self.couleur, (self.x_bouton, self.y_bouton, self.largeur, self.hauteur))
         font = pygame.font.SysFont('Calibri',60) #choix de la police d'écriture et de la taille
         texte = font.render(self.texte, 1, (0,0,0)) #texte en noir
@@ -36,12 +41,60 @@ class Menu_principal:
         self.tab_boutons = []
         for nom in noms_menus:
             self.tab_boutons.append(Bouton(couleur_boutons, nom, posX, posY, largeur, hauteur))
-            posY += 110
+            posY += 120
         
 
     def affiche_menu(self, fenetre):
         for bouton_courant in self.tab_boutons:
             bouton_courant.affiche_bouton(fenetre)
+
+    def interaction_menu(self,fenetre):
+        continuer = True
+
+        #placement du rectangle de selection par défaut
+        action = 0
+        self.tab_boutons[action].estSelectionne = True
+
+        clock = pygame.time.Clock()
+
+        while continuer :
+            clock.tick(30)
+            
+            #Gestion des évènements
+            for event in pygame.event.get():
+                #Fermeture de la fenêtre
+                if event.type == pygame.QUIT:
+                    continuer = False
+                    action = 3
+
+                #Gestion du déplacement du rectangle de sélection 
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP : #si on appuie sur la flèche du haut
+                        if action >= 1:
+                            #On positionne le rectangle de selection sur la case du dessus
+                            self.tab_boutons[action].estSelectionne = False
+                            action -= 1
+                            self.tab_boutons[action].estSelectionne = True
+                            
+                    if event.key == pygame.K_DOWN: #si on appuie sur la flèche du bas
+                        if action <= len(self.tab_boutons)-2:
+                            #On positionne le rectangle de selection sur la case du dessous
+                            self.tab_boutons[action].estSelectionne = False
+                            action += 1
+                            self.tab_boutons[action].estSelectionne = True
+                            
+                    if event.key == pygame.K_RETURN: #si le joueur appuie sur entrée
+                        continuer = False
+                            
+            #Affichage       
+            fenetre.fill((0,0,0))
+            self.affiche_menu(fenetre)
+            #Rafraichissement de l'affichage
+            pygame.display.update()
+            
+
+        return action #possibilité de réutiliser le résultat pour savoir quel programme lancer
+                      # (jouer, options, tuto ou quitter)
             
 
 
@@ -50,24 +103,6 @@ class Menu_principal:
 
 pygame.init()
 pygame.font.init()
-continuer = True
 
 menu = Menu_principal()
-
-clock = pygame.time.Clock()
-
-while continuer :
-    pygame.display.update()
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            #Fermeture de la fenêtre
-            continuer = False
-            
-    Affichage.ECRAN.fill((255,255,255))
-    menu.affiche_menu(Affichage.ECRAN)
-
-    
-    pygame.display.update()
-    clock.tick(30)
-
-pygame.quit()
+menu.interaction_menu(Affichage.ECRAN)
