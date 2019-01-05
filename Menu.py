@@ -31,7 +31,7 @@ class Menu_principal:
     def __init__(self):
         #définition des attributs des boutons du menu
         couleur_boutons = (255,0,0)
-        noms_menus = ["Jouer", "Options", "Tutoriel", "Quitter"]
+        noms_menus = ["Jouer", "Tutoriel", "Options", "Quitter"]
         posX = Affichage.TAILLE_ECRAN[0]/2-100 #centré
         posY = Affichage.TAILLE_ECRAN[1]/2-200 #Position du premier bouton
         largeur = 200
@@ -48,10 +48,10 @@ class Menu_principal:
         for bouton_courant in self.tab_boutons:
             bouton_courant.affiche_bouton(fenetre)
 
-    def interaction_menu(self,fenetre):
+    def lance_menu(self,fenetre):
         continuer = True
 
-        #placement du rectangle de selection par défaut
+        #Placement du rectangle de selection par défaut
         action = 0
         self.tab_boutons[action].estSelectionne = True
 
@@ -100,9 +100,9 @@ class Menu_principal:
 
 #############################################################################################
 #Programme principal pour tests
-
-pygame.init()
-pygame.font.init()
-
-menu = Menu_principal()
-menu.interaction_menu(Affichage.ECRAN)
+##
+##pygame.init()
+##pygame.font.init()
+##
+##menu = Menu_principal()
+##menu.lance_menu(Affichage.ECRAN)
