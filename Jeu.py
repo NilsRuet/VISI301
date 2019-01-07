@@ -103,23 +103,23 @@ def lance_jeu():
         
         if perso.vie==0:
             #Détection défaite, si le joueur n'a plus de vie
-            continuer_gameover = True
-            menu_gameover = Menu((255,0,0), ["Rejouer", "Menu principal"],
-                            Affichage.TAILLE_ECRAN[1]/2+50, 400, 90, 20, "Game Over",
-                            Affichage.TAILLE_ECRAN[1]/2-200, 200)
-
-            while continuer_gameover: #Tant qu'on a pas fait un choix dans le menu
-                action = menu_gameover.lance_menu(Affichage.ECRAN)
-                if action == 0: #Rejouer, on relance le jeu
-                    lance_jeu()
-                elif action == 1:
-                #dernier bouton donc c'est celui qui fait sortir du menu courant
-                    continuer_gameover = False
-            #une fois sortis de la boucle, on revient au menu principal
             continuer = False
+            menu_gameover = Menu((255,0,0), ["Rejouer", "Menu principal"],
+                         Affichage.TAILLE_ECRAN[1]/2+50, 400, 90, 20, "Game Over",
+                         Affichage.TAILLE_ECRAN[1]/2-200, 200)
             
         if perso.sortie_atteinte(laby.arrivee):
             #Détection de l'arrivée dans la pièce finale du labyrinthe
-            print("Gagné!")
             continuer=False
+            
+    continuer_gameover = True
+
+    while continuer_gameover: #Tant qu'on a pas fait un choix dans le menu
+        action = menu_gameover.lance_menu(Affichage.ECRAN)
+        if action == 0: #Rejouer, on relance le jeu
+            lance_jeu()
+        elif action == 1:
+        #dernier bouton donc c'est celui qui fait sortir du menu courant
+            continuer_gameover = False
+    #une fois sortis de la boucle, on revient au menu principal
 
