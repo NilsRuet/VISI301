@@ -4,6 +4,7 @@
 #Importations
 import pygame
 from Menu import *
+from Jeu  import *
 
 #Initialisations pygame
 pygame.init()

@@ -37,6 +37,7 @@ def lance_jeu():
 ######################################################################################################################
         
     continuer = True
+    entrer_gameover = True #Par défaut, à la fin du jeu, on rentre dans le menu gameover
 
     laby = Labyrinthe(OptJeu.TAILLE_LABYRINTHE)
     Piece.initListePieces(laby)
@@ -55,8 +56,11 @@ def lance_jeu():
     while continuer :
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                #Fermeture de la fenêtre
+                #si on appuie sur la croix on quitte la boucle de jeu
+                #et on ne rentre pas dans le menu gameover => on revient au menu principal
                 continuer = False
+                entrer_gameover = False
+                
             if event.type == pygame.KEYDOWN:
                 #On lit les touches enfoncées, on modifie la direction du personnage en fonction
                 #On indique aussi qu'une touche de direction est enfoncée
@@ -105,21 +109,25 @@ def lance_jeu():
             #Détection défaite, si le joueur n'a plus de vie
             continuer = False
             menu_gameover = Menu((255,0,0), ["Rejouer", "Menu principal"],
-                         Affichage.TAILLE_ECRAN[1]/2+50, 400, 90, 20, "Game Over",
-                         Affichage.TAILLE_ECRAN[1]/2-200, 200)
+                                 Affichage.TAILLE_ECRAN[1]/2+50, 400, 90, 20, "Game Over",
+                                 Affichage.TAILLE_ECRAN[1]/2-200, 200)
             
         if perso.sortie_atteinte(laby.arrivee):
             #Détection de l'arrivée dans la pièce finale du labyrinthe
-            continuer=False
-            
-    continuer_gameover = True
+            continuer = False
+            menu_gameover = Menu((255,0,0), ["Rejouer", "Menu principal"],
+                                 Affichage.TAILLE_ECRAN[1]/2+50, 400, 90, 20, "Vous avez gagné !",
+                                 Affichage.TAILLE_ECRAN[1]/2-200, 130)
 
-    while continuer_gameover: #Tant qu'on a pas fait un choix dans le menu
-        action = menu_gameover.lance_menu(Affichage.ECRAN)
-        if action == 0: #Rejouer, on relance le jeu
-            lance_jeu()
-        elif action == 1:
-        #dernier bouton donc c'est celui qui fait sortir du menu courant
-            continuer_gameover = False
+    #Affichage du menu gameover
+    if entrer_gameover:
+        continuer_gameover = True
+        while continuer_gameover: #Tant qu'on a pas fait un choix dans le menu
+            action = menu_gameover.lance_menu(Affichage.ECRAN) #on lance le menu game over
+            if action == 0: #Rejouer, on relance le jeu
+                lance_jeu()
+            elif action == 1:
+            #dernier bouton donc c'est celui qui fait sortir du menu courant
+                continuer_gameover = False
     #une fois sortis de la boucle, on revient au menu principal
 

@@ -1,6 +1,5 @@
 import pygame
 from Affichage import *
-from Jeu import *
 
 class Bouton:
     #Classe permettant de gérer un bouton rectangulaire dans un menu
