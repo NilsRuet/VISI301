@@ -15,12 +15,19 @@ class Coords:
 
 class Affichage_jeu:
     #Classe regroupant les caractéristiques de l'affichage du jeu
+        
     def __init__(self, coordsF, taille_caseF):
         self.coords = coordsF
         #Coordonnées "de départ" pour afficher le jeu
         self.taille_case = taille_caseF
         #Taille des cases du jeu
 
+    def fond_jeu(self, sprite_fond):
+        #Colle une image par défaut sur chaque case du jeu
+        for colonne in range(OptJeu.NB_CASES):
+            for ligne in range(OptJeu.NB_CASES):
+                Affichage.ECRAN.blit(sprite_fond.image, (colonne*self.taille_case[0], ligne*self.taille_case[1]))
+                
 class Affichage_carte:
     #Classe regroupant les caractéristiques de la carte
     def __init__(self, coordsF, taille_pieceF):
@@ -34,6 +41,44 @@ class Affichage_vie:
         self.coords = coordsF
         self.largeur = largeurF
         self.hauteur = hauteurF
+
+class Sprite:
+    liste={}
+    def __init__(self, file, nom, width, height, fix_width=True, fix_height=True, decalage_pourcent_x=0, decalage_pourcent_y=0):
+        #Sert à initialiser une image
+        #width, height : dimension de l'emplacement où l'image est affichée
+        #
+        #nom : nom sous lequel enregistrer l'image dans la liste des images
+        #
+        #fix_width, fix_height : si fix_width est faux, on ignore la largeur imposée et on la définit par rapport à la hauteur imposée en gardant les proportions de l'image de base
+        #Inversement si fix_heught est faux. Ces deux paramètres permettent de choisir si on veut adapter la taille de l'image à son emplacement
+        #
+        #decalage_pourcent_x, decalage_pourcent_y : permet de spécifier un décalage en donnant sa valeur en % par rapport à la taille de l'image finale
+        #Exemple : si decalage_pourcent_x vaut 0.2 et que la largeur finale de l'image est 100, l'image a un décalage de 20 pixels en x.
+        self.image = pygame.image.load(file).convert_alpha()
+
+
+        scale_width = width
+        scale_height = height
+
+        if not(fix_width and fix_height):
+            if not fix_width:
+                #Adaptation de la largeur par rapport à la hauteur
+                coef_largeur_hauteur = self.image.get_width()/self.image.get_height()
+                scale_width = round(scale_height*coef_largeur_hauteur)             
+                
+            if not fix_height:
+                #Adaptation de la hauteur par rapport à la largeur
+                coef_hauteur_largeur = self.image.get_height()/self.image.get_width()
+                scale_height = round(scale_width*coef_hauteur_largeur)
+
+        self.xi = round(width*(decalage_pourcent_x/100))
+        self.yi = round(height*(decalage_pourcent_y/100))
+        
+        self.image = pygame.transform.scale(self.image, (scale_width, scale_height))
+
+        Sprite.liste[nom]=self
+
         
 class Affichage:
     #Initialisation de la fenêtre

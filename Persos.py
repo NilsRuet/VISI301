@@ -114,6 +114,8 @@ class Joueur(Perso):
 
 class Ennemi(Perso):
     #Classe représentant un ennemi, qui attaque le joueur
+    sprite_direction={"HAUT":"ennemiH","BAS":"ennemiB","GAUCHE":"ennemiG","DROITE":"ennemiD"}
+    
     VIE_DEPART=20
     ATTAQUE=10
     VITESSE_ATTAQUE=1000
@@ -168,8 +170,25 @@ class Ennemi(Perso):
             autoriser_mouvement = False       
         
         else:
+            #Si l'ennemi a le droit de se déplacer
+            
             #Gestion des collisions
             autoriser_mouvement = Ennemi.case_valide(self.x+dx,self.y+dy,self.piece,joueur)
+
+            #Gestion de la direction
+            if abs(dy)>abs(dx):
+                #si on se déplace plus verticalement qu'horizontalement
+                #On choisit la direction en fonction du signe du déplacement vertical
+                if dy<0:
+                    self.direction="HAUT"
+                else:
+                    self.direction="BAS"
+            else:
+                #Sinon on choisit la direction en fonction du signe du déplacement horizontal
+                if dx<0:
+                    self.direction="GAUCHE"
+                else:
+                    self.direction="DROITE"
             
         #Deplacement du personnage
         if autoriser_mouvement:
@@ -183,8 +202,8 @@ class Ennemi(Perso):
             self.last_mvt = pygame.time.get_ticks()
 
     def attaquer(self, joueur):
-        if (joueur.x-self.x,joueur.y-self.y) in ((0,1),(0,-1),(1,0),(-1,0)):
-            #Si le joueur est sur une case adjacente
+        if [joueur.x-self.x,joueur.y-self.y] == Perso.directions[self.direction]:
+            #Si le joueur est sur la case où l'ennemi veut se déplacer
             if not ((pygame.time.get_ticks() - self.last_attaque) < self.vitesse_attaque):
                 joueur.vie-=self.attaque
                 self.last_attaque = pygame.time.get_ticks()
@@ -194,5 +213,14 @@ class Ennemi(Perso):
 
     def affiche(self):
         #Méthode d'affichage d'un ennemi
-        rectangle = (self.x*Affichage.JEU.taille_case[0] + Affichage.JEU.coords.xi, self.y*Affichage.JEU.taille_case[1] + Affichage.JEU.coords.yi, self.width, self.height)
-        pygame.draw.rect(Affichage.ECRAN, (0,127,0), rectangle)
+
+        sprite = Sprite.liste[Ennemi.sprite_direction[self.direction]]
+        
+        x = self.x*Affichage.JEU.taille_case[0] + Affichage.JEU.coords.xi +sprite.xi
+        #Coordonnée en x de la case à laquelle se trouve l'ennemi, + coordonnée de départ en x du jeu + décalage du sprite en x
+        y = self.y*Affichage.JEU.taille_case[1] + Affichage.JEU.coords.yi +sprite.yi
+        #Coordonnée en y de la case à laquelle se trouve l'ennemi, + coordonnée de départ en y du jeu + décalage du sprite en y
+        
+        Affichage.ECRAN.blit(sprite.image,(x,y))
+        
+        

@@ -10,7 +10,7 @@ from Persos import *
 class Piece:
     #Classe contenant les caractéristiques d'une pièce dans le labyrinthe
     listePieces={}
-            
+    
     def __init__(self, numPieceF, typePiece, iF, jF):
         self.numPiece=numPieceF
         self.typePiece=typePiece
@@ -170,6 +170,7 @@ class CarteUnePiece:
 
 class Case:
     #Classe contenant les informations d'une case dans une pièce
+    
     def __init__(self, typeCaseF, collisionF):
         self.typeCase = typeCaseF
         self.collision = collisionF
@@ -193,5 +194,6 @@ class Case:
         if self.typeCase < 0:
             pygame.draw.rect(Affichage.ECRAN, (0,255,0), (x_case, y_case, hauteur, largeur))
         else:
-            pygame.draw.rect(Affichage.ECRAN, couleur, (x_case, y_case, hauteur, largeur))
+            if self.typeCase == 0:
+                Affichage.ECRAN.blit(Sprite.liste["sapin"].image,(x_case+Sprite.liste["sapin"].xi, y_case+Sprite.liste["sapin"].yi))
             

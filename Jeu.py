@@ -12,6 +12,16 @@ from Affichage import *
 from Armes import *
 
 ####################################################################################
+#Endroit provisoire pour le chargement des sprites
+Sprite("ressources/neige.png","neige",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
+Sprite("ressources/sapin.png","sapin",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1],fix_height=False, decalage_pourcent_y=-50)
+
+Sprite("ressources/ennemiH.png","ennemiH",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
+Sprite("ressources/ennemiB.png","ennemiB",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
+Sprite("ressources/ennemiD.png","ennemiD",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
+Sprite("ressources/ennemiG.png","ennemiG",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
+
+####################################################################################
 def lance_jeu():
     #boucle principale qui gère le jeu et les évènements liés au jeu
 
@@ -19,12 +29,17 @@ def lance_jeu():
         #Procedure gérant l'ordre d'affichage des éléments
 
         Affichage.ECRAN.fill((0,0,0))
-        #On efface ce qui est déjà affiché = tout l'écran de jeu devient noir 
-        
-        CarteUnePiece.cartesChargees[perso.piece_actuelle].affiche_carte()
+        #On efface ce qui est déjà affiché = tout l'écran de jeu devient noir
+
+        Affichage.JEU.fond_jeu(Sprite.liste["neige"])
+        #Affichage du fond du jeu (= fond de la pièce actuelle)
+
         CarteUnePiece.cartesChargees[perso.piece_actuelle].affiche_ennemis()
         perso.affichage()
-        #Affichage de la pièce et de ses éléments
+        #Affichage des personnages
+
+        CarteUnePiece.cartesChargees[perso.piece_actuelle].affiche_carte()
+        #Affichage des éléments de la pièces
         
         perso.affichage_vie()
         #Affichage de la vie du personnage
