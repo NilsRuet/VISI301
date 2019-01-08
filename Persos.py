@@ -47,6 +47,7 @@ class Perso():
 
 class Joueur(Perso):
     #Personnage joué par l'utilisateur
+    sprite_direction={"HAUT":"joueurH","BAS":"joueurB","GAUCHE":"joueurG","DROITE":"joueurD"}
     
     VIE_DEPART=150
     #Pour les tests
@@ -108,8 +109,16 @@ class Joueur(Perso):
     
     def affichage(self):
         #Méthode d'affichage du joueur
-        rectangle = (self.x*Affichage.JEU.taille_case[0] + Affichage.JEU.coords.xi, self.y*Affichage.JEU.taille_case[1] + Affichage.JEU.coords.yi, self.width, self.height)
-        pygame.draw.rect(Affichage.ECRAN, (255, 0, 0), rectangle)
+        #Méthode d'affichage d'un ennemi
+
+        sprite = Sprite.liste[Joueur.sprite_direction[self.direction]]
+        
+        x = self.x*Affichage.JEU.taille_case[0] + Affichage.JEU.coords.xi +sprite.xi
+        #Coordonnée en x de la case à laquelle se trouve l'ennemi, + coordonnée de départ en x du jeu + décalage du sprite en x
+        y = self.y*Affichage.JEU.taille_case[1] + Affichage.JEU.coords.yi +sprite.yi
+        #Coordonnée en y de la case à laquelle se trouve l'ennemi, + coordonnée de départ en y du jeu + décalage du sprite en y
+        
+        Affichage.ECRAN.blit(sprite.image,(x,y))
     
 
 class Ennemi(Perso):

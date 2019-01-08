@@ -174,31 +174,24 @@ class Labyrinthe:
         #Affichage des murs verticaux
         for col_mur in range(1,len(self.carte), 2):
             for ligne_mur in range(0,len(self.carte[0]),2):
+                #On sélectionne chaque mur vertical (x impair, y pair dans le labyrinthe)
+                
+                x_mur = (((col_mur)//2)+1)*Affichage.CARTE.taille_piece[0] + Affichage.CARTE.coords.xi
+                y_mur = (((ligne_mur)//2))*Affichage.CARTE.taille_piece[1] + Affichage.CARTE.coords.yi
+                #On définit les coordonnées du mur             
                 if self.carte[col_mur][ligne_mur]:
-                    #On sélectionne chaque mur vertical (x impair, y pair dans le labyrinthe)
-                    
-                    largeur=Affichage.CARTE.taille_piece[0]//10
-                    hauteur=Affichage.CARTE.taille_piece[1]
-                    #On définit les dimension du mur           
-
-                    x_mur = (((col_mur)//2)+1)*Affichage.CARTE.taille_piece[0] + Affichage.CARTE.coords.xi
-                    y_mur = (((ligne_mur)//2))*Affichage.CARTE.taille_piece[1] + Affichage.CARTE.coords.yi
-                    #On définit les coordonnées du mur
-
-                    pygame.draw.rect(Affichage.ECRAN, (0,0,0), (x_mur, y_mur, largeur, hauteur))
-                    
+                    Affichage.ECRAN.blit(Sprite.liste["mur_vertical"].image,(x_mur+Sprite.liste["mur_vertical"].xi,y_mur+Sprite.liste["mur_vertical"].yi))
+                else:
+                    Affichage.ECRAN.blit(Sprite.liste["ouverture_verticale"].image,(x_mur+Sprite.liste["ouverture_verticale"].xi,y_mur+Sprite.liste["ouverture_verticale"].yi))
         #Affichage des murs horizontaux
         for col_mur in range(0,len(self.carte),2):
             for ligne_mur in range(1,len(self.carte[0]),2):
+                #On sélectionne chaque mur horizontal (x pair, y impair dans le labyrinthe)
+                x_mur = (((col_mur)//2))*Affichage.CARTE.taille_piece[0] + Affichage.CARTE.coords.xi
+                y_mur = (((ligne_mur)//2)+1)*Affichage.CARTE.taille_piece[1] + Affichage.CARTE.coords.yi
+                #On définit les coordonnées du mur
+                
                 if self.carte[col_mur][ligne_mur]:
-                    #On sélectionne chaque mur horizontal (x pair, y impair dans le labyrinthe)
-                    
-                    largeur=Affichage.CARTE.taille_piece[0]
-                    hauteur=Affichage.CARTE.taille_piece[1]//10
-                    #On définit les dimension du mur
-                    
-                    x_mur = (((col_mur)//2))*Affichage.CARTE.taille_piece[0] + Affichage.CARTE.coords.xi
-                    y_mur = (((ligne_mur)//2)+1)*Affichage.CARTE.taille_piece[1] + Affichage.CARTE.coords.yi
-                    #On définit les coordonnées du mur
-                    
-                    pygame.draw.rect(Affichage.ECRAN, (0,0,0), (x_mur, y_mur, largeur, hauteur))
+                    Affichage.ECRAN.blit(Sprite.liste["mur_horizontal"].image,(x_mur+Sprite.liste["mur_horizontal"].xi,y_mur+Sprite.liste["mur_horizontal"].yi))
+                else:
+                    Affichage.ECRAN.blit(Sprite.liste["ouverture_horizontale"].image,(x_mur+Sprite.liste["ouverture_horizontale"].xi,y_mur+Sprite.liste["ouverture_horizontale"].yi))

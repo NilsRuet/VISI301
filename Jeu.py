@@ -21,6 +21,16 @@ class Jeu:
         Sprite("ressources/ennemiD.png","ennemiD",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
         Sprite("ressources/ennemiG.png","ennemiG",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
 
+        Sprite("ressources/joueurH.png","joueurH",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
+        Sprite("ressources/joueurB.png","joueurB",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
+        Sprite("ressources/joueurD.png","joueurD",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
+        Sprite("ressources/joueurG.png","joueurG",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
+
+        Sprite("ressources/mur_vertical.png","mur_vertical",Affichage.CARTE.taille_piece[0]//10,Affichage.CARTE.taille_piece[1])
+        Sprite("ressources/mur_horizontal.png","mur_horizontal",Affichage.CARTE.taille_piece[0],Affichage.CARTE.taille_piece[1]//10)
+        Sprite("ressources/ouverture_verticale.png","ouverture_verticale",Affichage.CARTE.taille_piece[0]//10,Affichage.CARTE.taille_piece[1])
+        Sprite("ressources/ouverture_horizontale.png","ouverture_horizontale",Affichage.CARTE.taille_piece[0],Affichage.CARTE.taille_piece[1]//10)
+        
     def reset():
         Piece.listePieces={}
         CarteUnePiece.cartesChargees={}
