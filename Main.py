@@ -13,23 +13,33 @@ pygame.display.set_caption("Jeu")
 
 #Initialisation de la fenêtre (fond noir)
 Affichage.ECRAN.fill((0,0,0))
-
-
-#boucle principale
-continuer = True
-menu_principal = Menu((255,0,0), ["Jouer", "Tutoriel", "Options", "Quitter"],
+###########################################################################################
+def choix_menu_principal():
+    menu = Menu((255,0,0), ["Jouer", "Tutoriel", "Options", "Quitter"],
                 Affichage.TAILLE_ECRAN[1]/2-150, 200, 90, 20, "Menu Principal",
                 Affichage.TAILLE_ECRAN[1]/2-265, 70)
+    
+    action = menu.lance_menu(Affichage.ECRAN)
+    return action
 
+def traiter_choix_menu_principal(action):
+    fin_utilisation=False
+    if action==0:
+        enjeu=True
+        while enjeu:
+            jeu = Jeu()
+            jeu.executer_jeu()
+            enjeu=jeu.rejouer
+    elif action==3:
+        fin_utilisation=True
+
+    return not fin_utilisation
+##########################################################################################
+#Programme principal
+continuer = True
 while continuer:
-    action = menu_principal.lance_menu(Affichage.ECRAN)
-    if action == 0: #Jouer, on lance le jeu
-        lance_jeu()
-##  elif action == 1: #Tutoriel, on lance le menu du tuto
-##
-##  elif action == 2: #Options, on lance le menu des options
-    elif action == 3: #Quitter le programme, on ferme la fenêtre
-        continuer = False
+    action = choix_menu_principal()
+    continuer = traiter_choix_menu_principal(action)
 
 
 #Quitter l'application

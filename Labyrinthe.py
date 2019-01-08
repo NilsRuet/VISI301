@@ -6,10 +6,8 @@ from Affichage import *
 
 class Zone:
     #Classe représentant une "case" du labyrinthe, permet de facilement lier des cases entre elles
-    nb=0
-    def __init__(self):
-        Zone.nb+=1
-        self.zone = Zone.nb
+    def __init__(self, nb):
+        self.zone = nb
         #Numero de la case
         self.suiv=None
         #Case à laquelle est rattaché cette case
@@ -42,35 +40,38 @@ class Labyrinthe:
     def __init__(self, taille):
         self.carte=["+"]*(2*taille-1)
         self.taille = 2*taille-1
+        self.nb_zones=0
         
+        #Initialisation des zones (= pièces) du labyrinthe
         for colonne in range(len(self.carte)):
-            #Initialisation largeur carte
             self.carte[colonne]=["+"]*(2*taille-1)
-
+        
+        #Initialisation des zones (= pièces) du labyrinthe
         for colonne in range(0,len(self.carte),2):
-            #Initialisation hauteur carte
             for ligne in range(0,len(self.carte[0]),2):
-                self.carte[colonne][ligne]=Zone()
-
+                self.nb_zones+=1
+                self.carte[colonne][ligne]=Zone(self.nb_zones)
+        
+        #Initialisation mur verticaux
         for colonne in range(1,len(self.carte), 2):
-            #Initialisation mur verticaux
             for ligne in range(0,len(self.carte[0]),2):
                 self.carte[colonne][ligne]=True
-
+       
+        #Initialisation mur horizontaux
         for colonne in range(0,len(self.carte), 2):
-            #Initialisation mur horizontaux
             for ligne in range(1,len(self.carte[0]),2):
-                self.carte[colonne][ligne]=True
+                self.carte[colonne][ligne]=True          
 
         #Début de l'algorithme de génération
         #On liste les murs du labyrinthes
         liste_murs=[]
-        #Murs verticaux
+        
+        #On liste les murs verticaux
         for colonne in range(1,len(self.carte), 2):
             for ligne in range(0,len(self.carte[0]),2):
                 liste_murs.append((colonne,ligne))
 
-        #Murs horizontaux
+        #On liste les murs horizontaux
         for colonne in range(0,len(self.carte), 2):
             for ligne in range(1,len(self.carte[0]),2):
                 liste_murs.append((colonne,ligne))
@@ -78,6 +79,7 @@ class Labyrinthe:
         #On mélange la liste des murs pour générer un labyrinthe aléatoire
         random.shuffle(liste_murs)
 
+        #On va créer le labyrinthe en brisant si possible les murs, dans l'ordre de la liste
         for coord_mur in liste_murs:
             #Pour chaque mur on test si on peut le briser
             x = coord_mur[0]
@@ -98,12 +100,11 @@ class Labyrinthe:
                 salle1.devient(salle2)                
                 self.carte[x][y]=False
 
-        self.depart = random.randint(1,Zone.nb)
-        self.arrivee = random.randint(1,Zone.nb)
+        self.depart = random.randint(1,self.nb_zones)
+        self.arrivee = random.randint(1,self.nb_zones)
         while self.arrivee==self.depart:
             self.arrivee = random.randint(1,Zone.nb)
         #On choisit au hasard deux cases du labyrinthe différentes qui seront l'arrivée et le départ
-        #Modifications à faire pour choisir 2 cases assez éloignées l'une de l'autre
             
     def brisable(self, salle1, salle2):
         #Méthode permettant de savoir si deux salles n'appartiennent pas à la même zone
