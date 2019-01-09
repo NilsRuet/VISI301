@@ -26,17 +26,23 @@ class Piece:
         for i in range(0,labyF.taille, 2):
             for j in range(0,labyF.taille, 2):
                 #Pour chaque pièce
-                rndm_type = random.random()
-                if rndm_type<=0.7:
-                    typePiece = "ennemis"
-                elif rndm_type<=0.9:
-                    typePiece = "grille"
-                elif rndm_type<=1:
-                    typePiece = "test_fichier"
+                numPiece = labyF.carte[i][j].zone
+                if labyF.depart == numPiece:
+                    typePiece = "depart"
+                elif labyF.arrivee == numPiece:
+                    typePiece = "arrivee"
                 else:
-                    typePiece = "vide"
+                    rndm_type = random.random()
+                    if rndm_type<=0.1:
+                        typePiece = "repos"
+                    elif rndm_type<=0.4:
+                        typePiece = "ennemi01"
+                    elif rndm_type<=0.7:
+                        typePiece = "ennemi02"
+                    else:
+                        typePiece = "ennemi03"
                 #On choisit son type aléatoirement et on la crée ensuite
-                Piece.listePieces[labyF.carte[i][j].zone] = Piece(labyF.carte[i][j].zone,typePiece, i, j)
+                Piece.listePieces[numPiece] = Piece(numPiece,typePiece, i, j)
 
 
     def revele(self, labyF):
@@ -65,12 +71,7 @@ class CarteUnePiece:
         #On initialise un tableau de NB_CASES*NB_CASES qui sera remplit d'objets case
         #Ici, initialisé avec des cases vides dans toutes les cellules par défaut
 
-        if typePiece=="ennemis":
-            self.init_piece_ennemis()                        
-        elif typePiece=="grille":
-            self.init_piece_grille()
-        elif typePiece=="test_fichier":
-            self.init_depuis_fichier("niveaux/test.lvl")
+        self.init_depuis_fichier("niveaux/{}.lvl".format(typePiece))
         #On intitialise la pièce en fonction de son type
             
         self.creer_portes(labyF)
@@ -90,33 +91,17 @@ class CarteUnePiece:
             num_col=0
             while num_col<OptJeu.NB_CASES and ligne[num_col]!="\n":
                 #On lit chaque ligne caractère par caractère
-                val = int(ligne[num_col])
-                #Conversion du caractère en entier
-                self.carte[num_col][num_ligne]=Case(val,val==0)
-                #On créé une case, sa valeur est celle lue dans le fichier
-                #Elle engendre une collision si cette valeur vaut 0, d'où le second paramètre du constructeur
+                val = ligne[num_col]
+                if val=="e":
+                    if random.random()<0.25:#Constante jusqu'à l'augmentation de difficulté
+                        self.ennemis[num_col, num_ligne] = Ennemi(num_col, num_ligne, self)
+                elif val=="a":
+                    val = random.choice(["0","1"])
+                self.carte[num_col][num_ligne]=Case(val,val in Case.CASES_SOLIDES)
                 num_col+=1
             num_ligne+=1
             ligne = fichier.readline()
         fichier.close()
-    
-    def init_piece_ennemis(self):
-        #Initialisation d'une pièce où des ennemis ont une chance d'apparaître
-        for colonne in range(len(self.carte)):
-            for ligne in range(len(self.carte[0])):
-                self.carte[colonne][ligne] = Case(1, False)
-                if random.random()<=0.01:
-                    self.ennemis[colonne, ligne] = Ennemi(colonne, ligne, self)
-                    #Modèle ennemi temporaire
-
-    def init_piece_grille(self):
-        #Initialisation d'un modèle de pièce temporaire où la pièce est quadrillée
-        for colonne in range(len(self.carte)):
-            for ligne in range(len(self.carte[0])):
-                if colonne%2 == 1 and ligne%2 == 1:
-                    self.carte[colonne][ligne] = Case(0, True)
-                else:
-                    self.carte[colonne][ligne] = Case(1, False)
 
     def init_piece_vide(self):
         #Initialisation d'une pièce en pièce vide
@@ -170,6 +155,7 @@ class CarteUnePiece:
 
 class Case:
     #Classe contenant les informations d'une case dans une pièce
+    CASES_SOLIDES=["f","1"]
     
     def __init__(self, typeCaseF, collisionF):
         self.typeCase = typeCaseF
@@ -191,9 +177,11 @@ class Case:
         #Position de la case
         
         #On considère ici que la case vaut 0 ou 1, on affiche noir ou blanc
-        if self.typeCase < 0:
+        if isinstance(self.typeCase, int):
             pygame.draw.rect(Affichage.ECRAN, (0,255,0), (x_case, y_case, hauteur, largeur))
         else:
-            if self.typeCase == 0:
+            if self.typeCase == "1":
                 Affichage.ECRAN.blit(Sprite.liste["sapin"].image,(x_case+Sprite.liste["sapin"].xi, y_case+Sprite.liste["sapin"].yi))
+            if self.typeCase == "f":
+                Affichage.ECRAN.blit(Sprite.liste["feudecamp"].image,(x_case+Sprite.liste["feudecamp"].xi, y_case+Sprite.liste["feudecamp"].yi))
             

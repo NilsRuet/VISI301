@@ -91,7 +91,7 @@ class Joueur(Perso):
             self.last_mvt = pygame.time.get_ticks()
 
             #Gestion des changements de pièce
-            if piece.carte[self.x][self.y].typeCase<0:
+            if isinstance(piece.carte[self.x][self.y].typeCase, int):
                 self.piece_actuelle = -piece.carte[self.x][self.y].typeCase
                 self.x = (OptJeu.NB_CASES-1)-self.x
                 self.y = (OptJeu.NB_CASES-1)-self.y
