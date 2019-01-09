@@ -104,7 +104,7 @@ class Labyrinthe:
         self.depart = random.randint(1,self.nb_zones)
         self.arrivee = random.randint(1,self.nb_zones)
         while self.arrivee==self.depart:
-            self.arrivee = random.randint(1,self.nb_zones)
+            self.arrivee = random.randint(1,Zone.nb)
         #On choisit au hasard deux cases du labyrinthe différentes qui seront l'arrivée et le départ
             
     def brisable(self, salle1, salle2):
