@@ -17,7 +17,8 @@ Affichage.ECRAN.fill((0,0,0))
 def choix_menu_principal():
     menu = Menu((255,0,0), ["Jouer", "Tutoriel", "Options", "Quitter"],
                 Affichage.TAILLE_ECRAN[1]/2-(150*Affichage.TAILLE_ECRAN[1]/600),
-                200, 90, 25, "Menu Principal", Affichage.TAILLE_ECRAN[1]/2-(265*Affichage.TAILLE_ECRAN[1]/600),
+                200, (80*Affichage.TAILLE_ECRAN[1]/600), 25, "Menu Principal",
+                Affichage.TAILLE_ECRAN[1]/2-(265*Affichage.TAILLE_ECRAN[1]/600),
                 int(70*Affichage.TAILLE_ECRAN[1]/600))
     
     action = menu.lance_menu(Affichage.ECRAN)

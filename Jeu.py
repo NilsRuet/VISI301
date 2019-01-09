@@ -167,8 +167,8 @@ class Jeu:
             taille_titre = int(180*Affichage.TAILLE_ECRAN[1]/600)
             
         menu_gameover = Menu((255,0,0), ["Rejouer", "Menu principal"],
-                        Affichage.TAILLE_ECRAN[1]/2+(50*Affichage.TAILLE_ECRAN[1]/600), 400, 90, 20,
-                         titre, Affichage.TAILLE_ECRAN[1]/2-(200*Affichage.TAILLE_ECRAN[1]/600), taille_titre)
+                       (325*Affichage.TAILLE_ECRAN[1]/600), 400, 90, 25, titre,
+                        Affichage.TAILLE_ECRAN[1]/2-(200*Affichage.TAILLE_ECRAN[1]/600), taille_titre)
         
         action =  menu_gameover.lance_menu(Affichage.ECRAN)
         
