@@ -16,10 +16,13 @@ class Coords:
 class Affichage_jeu:
     #Classe regroupant les caractéristiques de l'affichage du jeu
         
-    def __init__(self, coordsF, taille_caseF):
+    def __init__(self, coordsF, tailleF):
         self.coords = coordsF
         #Coordonnées "de départ" pour afficher le jeu
-        self.taille_case = taille_caseF
+
+        self.taille=tailleF
+        
+        self.taille_case = (round(tailleF/OptJeu.NB_CASES),round(tailleF/OptJeu.NB_CASES))
         #Taille des cases du jeu
 
     def fond_jeu(self, sprite_fond):
@@ -30,10 +33,16 @@ class Affichage_jeu:
                 
 class Affichage_carte:
     #Classe regroupant les caractéristiques de la carte
-    def __init__(self, coordsF, taille_pieceF):
+    def fond_carte(self):
+        Affichage.ECRAN.blit(Sprite.liste["fond_carte"].image, (self.coords.xi+Sprite.liste["fond_carte"].xi, self.coords.yi+Sprite.liste["fond_carte"].yi))
+        
+    def __init__(self, coordsF, tailleF):
         self.coords = coordsF
         #Coordonnées "de départ" pour afficher la carte
-        self.taille_piece = taille_pieceF
+
+        self.taille = tailleF
+        vraie_taille_piece = round((tailleF/OptJeu.TAILLE_LABYRINTHE))
+        self.taille_piece = (vraie_taille_piece,vraie_taille_piece)
         #Taille des cases de la carte
 
 class Affichage_vie:
@@ -82,30 +91,34 @@ class Sprite:
         
 class Affichage:
     #Initialisation de la fenêtre
-    TAILLE_ECRAN = (1000, 600) #largeur / hauteur
+    hauteur_ecran = 600
+    TAILLE_ECRAN = (hauteur_ecran*2, hauteur_ecran) #largeur / hauteur
     ECRAN = pygame.display.set_mode(TAILLE_ECRAN)
 
-    #Initialisation des caractéristiques d'affichage du jeu                       
-    X_JEU, Y_JEU = 0, 0
-    #Le jeu est affiché en haut à gauche de la fenêtre
-    largeur_case = ((TAILLE_ECRAN[0]//2)//OptJeu.NB_CASES)
-    #La taille d'une case est prévue pour que le jeu soit affiché sur la moitié (horizontalement) de la fenêtre
-    JEU = Affichage_jeu(Coords(X_JEU, Y_JEU), (largeur_case,largeur_case))
-
-    #Initialisation des caractéristiques d'affichage de la carte
-    X_CARTE, Y_CARTE = ((TAILLE_ECRAN[0])//2)+1,0
-    #La carte est affichée à partir du milieu de la fenêtre horizontalement, collée en haut de la fenêtre
-    largeur_piece = (TAILLE_ECRAN[0]//2)//OptJeu.TAILLE_LABYRINTHE
-    #La taille d'une case est prévue pour que l'affichage de la carte se fasse sur une moitié horizontale de la fenêtre
-    CARTE = Affichage_carte(Coords(X_CARTE, Y_CARTE), (largeur_piece,largeur_piece))
-
-    #Initialisation de l'affichage de la vie du personnage
-    X_VIE=0
-    Y_VIE=Y_JEU+largeur_case*OptJeu.NB_CASES+10
-    #Ici l'affichage se fait juste en dessous de la fenêtre de jeu
-    largeur = largeur_case*OptJeu.NB_CASES
-    hauteur = largeur_case//4
-
-    VIE=Affichage_vie(Coords(X_VIE, Y_VIE), largeur, hauteur)
+    #Taille des éléments
     
+    taille_jeu = round(TAILLE_ECRAN[0]/2)
+    #Jeu
+    largeur_vie = round((TAILLE_ECRAN[0]/2)-20)
+    hauteur_vie = round(largeur_vie/20)
+    #Vie
+    taille_carte = round((TAILLE_ECRAN[1]/1.5))
+    #Carte
+
+    #Positions des éléments
+
+    X_JEU, Y_JEU = 0, 0
+    #Jeu
+      
+    Y_CARTE = round((TAILLE_ECRAN[1]-taille_carte)/2)
+    X_CARTE = round(taille_jeu+1+taille_carte/10)
+    #Carte
+    
+    X_VIE, Y_VIE = (TAILLE_ECRAN[0]/2)+10, 10
+    #Vie
+                       
+    VIE=Affichage_vie(Coords(X_VIE, Y_VIE), largeur_vie, hauteur_vie)
+    JEU = Affichage_jeu(Coords(X_JEU, Y_JEU), taille_jeu)
+    CARTE = Affichage_carte(Coords(X_CARTE, Y_CARTE), taille_carte)
+    #Initialisation des caractéristiques d'affichage de tous les éléments 
     

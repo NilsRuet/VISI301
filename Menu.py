@@ -17,11 +17,11 @@ class Bouton:
     def affiche_bouton(self, fenetre):
         #méthode qui permet d'afficher le bouton sur l'écran
         if self.estSelectionne:
-            pygame.draw.rect(fenetre, (0,255,0), (self.x_bouton-8,self.y_bouton-8,self.largeur+16,self.hauteur+16),0)
+            pygame.draw.rect(fenetre, (0,255,0), (self.x_bouton-10,self.y_bouton-10,self.largeur+20,self.hauteur+20),0)
             #On dessine un contour vert au bouton courant (représentant rectangle de selection)
             
         pygame.draw.rect(fenetre, self.couleur, (self.x_bouton, self.y_bouton, self.largeur, self.hauteur))
-        font = pygame.font.SysFont('Calibri',int(60*Affichage.TAILLE_ECRAN[1]/600)) #choix de la police d'écriture et de la taille
+        font = pygame.font.SysFont('Calibri',60) #choix de la police d'écriture et de la taille
         texte = font.render(self.texte, 1, (0,0,0)) #texte en noir
         fenetre.blit(texte, (self.x_bouton + (self.largeur/2 - texte.get_width()/2), self.y_bouton + (self.hauteur/2 - texte.get_height()/2)))
         #centre le texte dans le bouton
@@ -35,11 +35,11 @@ class Menu:
         #définition des attributs des boutons du menu
         self.couleur_boutons = couleurs_boutons
         self.noms_menus = noms_menus #tableau de chaines de caractères
-        self.largeur = int(largeur * Affichage.TAILLE_ECRAN[1]/600)
-        self.hauteur = int(hauteur * Affichage.TAILLE_ECRAN[0]/1000)
-        self.posX = Affichage.TAILLE_ECRAN[0]/2-(self.largeur/2) #centré
+        self.posX = Affichage.TAILLE_ECRAN[0]/2-(largeur/2) #centré
         self.posY = posY #Position du premier bouton
-        self.distance_boutons = int(self.hauteur + distance_boutons * (Affichage.TAILLE_ECRAN[1]/1000))
+        self.largeur = largeur
+        self.hauteur = hauteur
+        self.distance_boutons = self.hauteur + distance_boutons
 
         #définition du titre du menu
         font = pygame.font.SysFont('Calibri', taille_titre)

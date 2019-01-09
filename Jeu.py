@@ -31,6 +31,14 @@ class Jeu:
         Sprite("ressources/mur_horizontal.png","mur_horizontal",Affichage.CARTE.taille_piece[0],Affichage.CARTE.taille_piece[1]//10)
         Sprite("ressources/ouverture_verticale.png","ouverture_verticale",Affichage.CARTE.taille_piece[0]//10,Affichage.CARTE.taille_piece[1])
         Sprite("ressources/ouverture_horizontale.png","ouverture_horizontale",Affichage.CARTE.taille_piece[0],Affichage.CARTE.taille_piece[1]//10)
+
+        Sprite("ressources/piece_joueur.png","piece_joueur",Affichage.CARTE.taille_piece[0],Affichage.CARTE.taille_piece[1])
+        Sprite("ressources/piece_feu_camp.png","piece_feu_de_camp",Affichage.CARTE.taille_piece[0],Affichage.CARTE.taille_piece[1])
+        Sprite("ressources/neige.png","piece_vide",Affichage.CARTE.taille_piece[0],Affichage.CARTE.taille_piece[1])
+
+        vraie_taille_carte = round(Affichage.CARTE.taille*(1.1)-(Affichage.CARTE.taille_piece[0]//10))
+        #Opération qui compense les murs, qui ne sont pas pris en compte lors de la spécification de la taille
+        Sprite("ressources/fond_carte.png","fond_carte",vraie_taille_carte,vraie_taille_carte)
         
     def reset():
         Piece.listePieces={}
@@ -141,6 +149,7 @@ class Jeu:
         self.perso.affichage_vie()
         #Affichage de la vie du personnage
         
+        Affichage.CARTE.fond_carte()
         self.laby.affiche_lab((Piece.listePieces[self.perso.piece_actuelle].i, Piece.listePieces[self.perso.piece_actuelle].j))
         #Affichage de la carte du labyrinthe
 
@@ -152,14 +161,12 @@ class Jeu:
     def game_over(self):
         if self.gagne:
             titre="Vous avez gagné !"
-            taille_titre = int(110*Affichage.TAILLE_ECRAN[1]/600)
         else:
             titre="Game over"
-            taille_titre = int(180*Affichage.TAILLE_ECRAN[1]/600)
             
         menu_gameover = Menu((255,0,0), ["Rejouer", "Menu principal"],
-                         Affichage.TAILLE_ECRAN[1]/2+(50*Affichage.TAILLE_ECRAN[1]/600), 400, 90, 20,
-                         titre, Affichage.TAILLE_ECRAN[1]/2-(200*Affichage.TAILLE_ECRAN[1]/600), taille_titre)
+                         Affichage.TAILLE_ECRAN[1]/2+50, 400, 90, 20, titre,
+                         Affichage.TAILLE_ECRAN[1]/2-200, 200)
 
         action =  menu_gameover.lance_menu(Affichage.ECRAN)
         

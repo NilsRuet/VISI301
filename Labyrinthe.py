@@ -3,6 +3,7 @@
 
 import random
 from Affichage import *
+from Piece import *
 
 class Zone:
     #Classe représentant une "case" du labyrinthe, permet de facilement lier des cases entre elles
@@ -103,7 +104,7 @@ class Labyrinthe:
         self.depart = random.randint(1,self.nb_zones)
         self.arrivee = random.randint(1,self.nb_zones)
         while self.arrivee==self.depart:
-            self.arrivee = random.randint(1,self.nb_zones)
+            self.arrivee = random.randint(1,Zone.nb)
         #On choisit au hasard deux cases du labyrinthe différentes qui seront l'arrivée et le départ
             
     def brisable(self, salle1, salle2):
@@ -137,61 +138,65 @@ class Labyrinthe:
             print(ligne+"|")
         print("-"*(len(self.carte)*2+3))
 
+    def get_piece(self, col, ligne):
+        return Piece.listePieces[self.carte[col][ligne].zone]
+
     def affiche_lab(self, piece_actu=(0,0)):
-        #Méthode d'affichage du labyrinthe dans une fenêtre
-        
+        #Méthode d'affichage du labyrinthe dans une fenêtre 
+        def trouve_coords_elem(x_lab, y_lab):
+            largeur_piece = Affichage.CARTE.taille_piece[0]
+            epaisseur_mur = round(largeur_piece/10)
+
+            nb_pieces_x = ((x_lab+1)//2)
+            nb_murs_x = ((x_lab)//2)
+
+            nb_pieces_y = ((y_lab+1)//2)
+            nb_murs_y = ((y_lab)//2)
+
+            x = epaisseur_mur*nb_murs_x + largeur_piece*nb_pieces_x + Affichage.CARTE.coords.xi
+            y = epaisseur_mur*nb_murs_y + largeur_piece*nb_pieces_y + Affichage.CARTE.coords.yi
+
+            return x, y
+
         #Affichage des pièces
         for col_lab in range(0,len(self.carte),2):
             for ligne_lab in range(0,len(self.carte[0]),2):
-                col = col_lab//2
-                ligne = ligne_lab//2
-                #Pour chaque pièce, on retrouve ses coordonnées relatives aux autres pièces (en ignorant les murs)
-                
-                largeur=Affichage.CARTE.taille_piece[0]
-                hauteur=Affichage.CARTE.taille_piece[1]
-                #On définit les dimensions d'une pièce
-                
-                x_piece=Affichage.CARTE.coords.xi + (col)*largeur
-                y_piece=Affichage.CARTE.coords.yi + (ligne)*hauteur
+                x_piece, y_piece = trouve_coords_elem(col_lab, ligne_lab)
                 #On définit les coordonnée et la taille de la pièces à afficher
-                
-                if col_lab==piece_actu[0] and ligne_lab==piece_actu[1]:
-                    #Affichage de la pièce dans laquelle se trouve le personnage
-                    pygame.draw.rect(Affichage.ECRAN, (200,200,200), (x_piece, y_piece, largeur, hauteur))
-                    
-                elif self.carte[col_lab][ligne_lab].zone == self.depart:
-                    #Affichage de la pièce de départ (bleue)
-                    pygame.draw.rect(Affichage.ECRAN, (0,0,255), (x_piece, y_piece, largeur, hauteur))
-                    
-                elif self.carte[col_lab][ligne_lab].zone  == self.arrivee:
-                    #Affichage de la pièce d'arrivée (rouge)
-                    pygame.draw.rect(Affichage.ECRAN, (255,0,0), (x_piece, y_piece, largeur, hauteur))
-                    
-                else:
-                    #Affichage d'une pièce sans particularité
-                    pygame.draw.rect(Affichage.ECRAN, (255,255,255), (x_piece, y_piece, largeur, hauteur))
-                    
+                if self.get_piece(col_lab, ligne_lab).vue:
+                    if col_lab==piece_actu[0] and ligne_lab==piece_actu[1]:
+                        #Affichage de la pièce dans laquelle se trouve le personnage
+                        Affichage.ECRAN.blit(Sprite.liste["piece_joueur"].image,(x_piece+Sprite.liste["piece_joueur"].xi,y_piece+Sprite.liste["piece_joueur"].yi))
+                    elif self.get_piece(col_lab, ligne_lab).typePiece == "repos":
+                        Affichage.ECRAN.blit(Sprite.liste["piece_feu_de_camp"].image,(x_piece+Sprite.liste["piece_feu_de_camp"].xi,y_piece+Sprite.liste["piece_feu_de_camp"].yi))
+                    else:
+                        Affichage.ECRAN.blit(Sprite.liste["piece_vide"].image,(x_piece+Sprite.liste["piece_vide"].xi,y_piece+Sprite.liste["piece_vide"].yi))
+                 
+
+           
         #Affichage des murs verticaux
         for col_mur in range(1,len(self.carte), 2):
             for ligne_mur in range(0,len(self.carte[0]),2):
                 #On sélectionne chaque mur vertical (x impair, y pair dans le labyrinthe)
-                
-                x_mur = (((col_mur)//2)+1)*Affichage.CARTE.taille_piece[0] + Affichage.CARTE.coords.xi
-                y_mur = (((ligne_mur)//2))*Affichage.CARTE.taille_piece[1] + Affichage.CARTE.coords.yi
-                #On définit les coordonnées du mur             
-                if self.carte[col_mur][ligne_mur]:
-                    Affichage.ECRAN.blit(Sprite.liste["mur_vertical"].image,(x_mur+Sprite.liste["mur_vertical"].xi,y_mur+Sprite.liste["mur_vertical"].yi))
-                else:
-                    Affichage.ECRAN.blit(Sprite.liste["ouverture_verticale"].image,(x_mur+Sprite.liste["ouverture_verticale"].xi,y_mur+Sprite.liste["ouverture_verticale"].yi))
+                if self.get_piece(col_mur+1, ligne_mur).vue or self.get_piece(col_mur-1, ligne_mur).vue:
+                    #On regarde si une des pièces qu'il sépare a été vue avant de l'afficher.
+                    x_mur, y_mur = trouve_coords_elem(col_mur, ligne_mur)
+                    #On définit les coordonnées du mur             
+                    if self.carte[col_mur][ligne_mur]:
+                        Affichage.ECRAN.blit(Sprite.liste["mur_vertical"].image,(x_mur+Sprite.liste["mur_vertical"].xi,y_mur+Sprite.liste["mur_vertical"].yi))
+                    else:
+                        Affichage.ECRAN.blit(Sprite.liste["ouverture_verticale"].image,(x_mur+Sprite.liste["ouverture_verticale"].xi,y_mur+Sprite.liste["ouverture_verticale"].yi))
+                    
         #Affichage des murs horizontaux
         for col_mur in range(0,len(self.carte),2):
             for ligne_mur in range(1,len(self.carte[0]),2):
                 #On sélectionne chaque mur horizontal (x pair, y impair dans le labyrinthe)
-                x_mur = (((col_mur)//2))*Affichage.CARTE.taille_piece[0] + Affichage.CARTE.coords.xi
-                y_mur = (((ligne_mur)//2)+1)*Affichage.CARTE.taille_piece[1] + Affichage.CARTE.coords.yi
-                #On définit les coordonnées du mur
+                if self.get_piece(col_mur, ligne_mur+1).vue or self.get_piece(col_mur, ligne_mur-1).vue:
+                    #On regarde si une des pièces qu'il sépare a été vue avant de l'afficher.
+                    x_mur, y_mur = trouve_coords_elem(col_mur, ligne_mur)
+                    #On définit les coordonnées du mur
                 
-                if self.carte[col_mur][ligne_mur]:
-                    Affichage.ECRAN.blit(Sprite.liste["mur_horizontal"].image,(x_mur+Sprite.liste["mur_horizontal"].xi,y_mur+Sprite.liste["mur_horizontal"].yi))
-                else:
-                    Affichage.ECRAN.blit(Sprite.liste["ouverture_horizontale"].image,(x_mur+Sprite.liste["ouverture_horizontale"].xi,y_mur+Sprite.liste["ouverture_horizontale"].yi))
+                    if self.carte[col_mur][ligne_mur]:
+                        Affichage.ECRAN.blit(Sprite.liste["mur_horizontal"].image,(x_mur+Sprite.liste["mur_horizontal"].xi,y_mur+Sprite.liste["mur_horizontal"].yi))
+                    else:
+                        Affichage.ECRAN.blit(Sprite.liste["ouverture_horizontale"].image,(x_mur+Sprite.liste["ouverture_horizontale"].xi,y_mur+Sprite.liste["ouverture_horizontale"].yi))
