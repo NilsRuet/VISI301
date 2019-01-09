@@ -15,6 +15,7 @@ class Jeu:
     def load_sprites():
         Sprite("ressources/neige.png","neige",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
         Sprite("ressources/sapin.png","sapin",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1],fix_height=False, decalage_pourcent_y=-50)
+        Sprite("ressources/feudecamp.png","feudecamp",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
         
         Sprite("ressources/ennemiH.png","ennemiH",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
         Sprite("ressources/ennemiB.png","ennemiB",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
@@ -47,7 +48,10 @@ class Jeu:
         Piece.initListePieces(self.laby)
         #Génération du labyrinthe
 
-        self.perso = Joueur(0,0,Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1],self.laby.depart)
+        x = OptJeu.NB_CASES//2 +1
+        y = OptJeu.NB_CASES//2 +1
+        
+        self.perso = Joueur(x,y,Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1],self.laby.depart)
         self.perso.set_arme(Melee(self.perso, 10, 300))#Test d'une arme avec 10 d'attaque, attaque toutes les 0.3s        
         Piece.listePieces[self.perso.piece_actuelle].revele(self.laby)
         #Génération du personnage et de la pièce de départ
