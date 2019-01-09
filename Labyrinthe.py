@@ -167,7 +167,7 @@ class Labyrinthe:
                     if col_lab==piece_actu[0] and ligne_lab==piece_actu[1]:
                         #Affichage de la pièce dans laquelle se trouve le personnage
                         Affichage.ECRAN.blit(Sprite.liste["piece_joueur"].image,(x_piece+Sprite.liste["piece_joueur"].xi,y_piece+Sprite.liste["piece_joueur"].yi))
-                    elif self.get_piece(col_lab, ligne_lab).typePiece == "repos":
+                    elif (self.get_piece(col_lab, ligne_lab).typePiece == "repos") or (self.get_piece(col_lab, ligne_lab).typePiece == "depart"):
                         Affichage.ECRAN.blit(Sprite.liste["piece_feu_de_camp"].image,(x_piece+Sprite.liste["piece_feu_de_camp"].xi,y_piece+Sprite.liste["piece_feu_de_camp"].yi))
                     else:
                         Affichage.ECRAN.blit(Sprite.liste["piece_vide"].image,(x_piece+Sprite.liste["piece_vide"].xi,y_piece+Sprite.liste["piece_vide"].yi))
