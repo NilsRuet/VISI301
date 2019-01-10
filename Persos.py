@@ -3,6 +3,7 @@
 
 import pygame
 import random
+from math import sqrt
 from Options import *
 from Affichage import *
 
@@ -63,7 +64,9 @@ class Joueur(Perso):
         self.piece_actuelle = pieceF
         #Et du numéro de la pièce dans laquelle il se trouve
         self.arme=None
-
+        self.points=0
+        self.gagne = False
+        
     def set_arme(self, armeF):
         self.arme = armeF
     
@@ -104,6 +107,13 @@ class Joueur(Perso):
         rect_vie = Affichage.rectangle_barre_progressive(Affichage.VIE.coords.xi, Affichage.VIE.coords.yi, Affichage.VIE.largeur, Affichage.VIE.hauteur, self.vie, self.max_vie)
         pygame.draw.rect(Affichage.ECRAN, (0, 127, 0), rect_vie)
 
+    def affichage_points(self):
+        texte="Points : {}".format(self.points)
+        font = pygame.font.SysFont('Calibri',Affichage.POINTS.taille_texte) #choix de la police d'écriture et de la taille
+        texte = font.render(texte, 1, (255,255,255))
+        Affichage.ECRAN.blit(texte, (Affichage.POINTS.coords.xi, Affichage.POINTS.coords.yi))
+        
+
     def attaquer(self):
         self.arme.attaquer()
 
@@ -117,7 +127,21 @@ class Joueur(Perso):
             if piece.carte[x_case][y_case].typeCase == "f":
                 self.se_repose()
                 self.arme.restaurer_durabilite()
-        
+
+            if self.points>0:
+                if piece.carte[x_case][y_case].typeCase == "h":
+                    self.max_vie+=15
+                    self.points-=1
+                if piece.carte[x_case][y_case].typeCase == "v":
+                    self.vitesse*=0.95
+                    self.points-=1
+                if piece.carte[x_case][y_case].typeCase == "d":
+                    self.arme.max_durabilite*=1.1
+                    self.arme.max_attaque = round(sqrt(self.arme.durabilite))
+                    self.points-=1
+            if piece.carte[x_case][y_case].typeCase == "c":
+                self.gagne=True
+            
     def affichage(self):
         #Méthode d'affichage du joueur
         #Méthode d'affichage d'un ennemi

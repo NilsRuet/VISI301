@@ -17,6 +17,10 @@ class Jeu:
         Sprite("ressources/neige.png","neige",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
         Sprite("ressources/sapin.png","sapin",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1],fix_height=False, decalage_pourcent_y=-50)
         Sprite("ressources/feudecamp.png","feudecamp",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
+        Sprite("ressources/bougies.png","bougies",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
+        Sprite("ressources/moufles.png","moufles",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
+        Sprite("ressources/raquettes.png","raquettes",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
+        Sprite("ressources/charbon.png","charbon",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
         
         Sprite("ressources/ennemiH.png","ennemiH",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
         Sprite("ressources/ennemiB.png","ennemiB",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
@@ -138,12 +142,12 @@ class Jeu:
         Piece.listePieces[self.perso.piece_actuelle].revele(self.laby)
         
     def gerer_etat_jeu(self):
-        if self.perso.vie==0:
+        if self.perso.vie<=0:
             #Détection défaite, si le joueur n'a plus de vie
             self.gagne=False
             self.arreter_jeu()
             
-        if self.perso.sortie_atteinte(self.laby.arrivee) and False:
+        if self.perso.gagne:
             #Détection de l'arrivée dans la pièce finale du labyrinthe
             self.gagne=True
             self.arreter_jeu()
@@ -166,6 +170,8 @@ class Jeu:
         
         self.perso.affichage_vie()
         #Affichage de la vie du personnage
+
+        self.perso.affichage_points()
         
         Affichage.CARTE.fond_carte()
         self.laby.affiche_lab((Piece.listePieces[self.perso.piece_actuelle].i, Piece.listePieces[self.perso.piece_actuelle].j))

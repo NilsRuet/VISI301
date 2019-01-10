@@ -62,6 +62,11 @@ class Affichage_puissance_arme:
         self.coords = coordsF
         self.largeur = largeurF
         self.hauteur = hauteurF
+
+class Affichage_points:
+    def __init__(self, coordsF, taille_texteF):
+        self.coords = coordsF
+        self.taille_texte=taille_texteF
         
 class Sprite:
     liste={}
@@ -127,6 +132,8 @@ class Affichage:
     taille_carte = round((TAILLE_ECRAN[1]/1.5))
     #Carte
 
+    taille_points = TAILLE_ECRAN[1]//10
+
     #Positions des éléments
 
     X_JEU, Y_JEU = 0, 0
@@ -140,12 +147,16 @@ class Affichage:
     X_DURABILITE, Y_DURABILITE = (TAILLE_ECRAN[0]/2)+10, Y_VIE+hauteur_vie+10
     X_ATTAQUE, Y_ATTAQUE = (TAILLE_ECRAN[0]/2)+10, Y_DURABILITE+hauteur_durabilite+10
     #Vie
+
+    X_POINTS, Y_POINTS = X_CARTE, round(Y_CARTE+taille_carte*1.1+10)
+    #Points du joueurs
                        
     VIE=Affichage_vie(Coords(X_VIE, Y_VIE), largeur_vie, hauteur_vie)
     DURABILITE=Affichage_vie(Coords(X_DURABILITE, Y_DURABILITE), largeur_durabilite, hauteur_durabilite)
     ATTAQUE=Affichage_vie(Coords(X_ATTAQUE, Y_ATTAQUE), largeur_attaque, hauteur_attaque)
     JEU = Affichage_jeu(Coords(X_JEU, Y_JEU), taille_jeu)
     CARTE = Affichage_carte(Coords(X_CARTE, Y_CARTE), taille_carte)
+    POINTS = Affichage_points(Coords(X_POINTS, Y_POINTS), taille_points)
     #Initialisation des caractéristiques d'affichage de tous les éléments
 
     def rectangle_barre_progressive(x, y, largeur, hauteur, quantite, quantite_max, quantite_min=0):

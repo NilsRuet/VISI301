@@ -1,7 +1,7 @@
 ##################################################################################################
 # Fichier contenant les classes correspondant aux armes que peut posséder ke joueur
 import pygame
-
+from math import sqrt
 from Persos import *
 from Piece import *
 
@@ -14,7 +14,7 @@ class Arme():
         self.last_attaque = 0
 
 class Melee(Arme):
-    MAX_ATTAQUE_INIT = 20
+    MAX_ATTAQUE_INIT = round(sqrt(1000))
     MIN_ATTAQUE_INIT = 1
     DURABILITE_INIT = 1000
     #Classe correspondant à une arme à courte portée
@@ -53,6 +53,7 @@ class Melee(Arme):
         if self.durabilite<=0:
             self.vitesse_attaque=self.vitesse_attaque//2
         self.durabilite = self.max_durabilite
+        self.attaque = (self.max_attaque+self.min_attaque)//4
         
     def attaquer(self):
         if pygame.time.get_ticks() - self.last_attaque > self.vitesse_attaque:
@@ -69,6 +70,7 @@ class Melee(Arme):
                 self.enlever_durabilite(self.attaque)
                 if ennemi.vie<=0:
                     ennemi.meurt()
+                    self.owner.points+=1
 
         
     def afficher_statistiques(self):

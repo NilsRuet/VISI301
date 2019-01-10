@@ -35,7 +35,7 @@ class Piece:
                 else:
                     rndm_type = random.random()
                     if rndm_type<=0.1:
-                        typePiece = "repos"   
+                        typePiece = "repos" 
                     elif rndm_type<=0.4:
                         typePiece = "ennemi01"
                     elif rndm_type<=0.7:
@@ -131,6 +131,7 @@ class CarteUnePiece:
                         self.ennemis[num_col, num_ligne] = Ennemi(num_col, num_ligne, self)
                 elif val=="a":
                     val = random.choice(["0","1"])
+                    
                 self.carte[num_col][num_ligne]=Case(val,val in Case.CASES_SOLIDES)
                 num_col+=1
             num_ligne+=1
@@ -189,7 +190,7 @@ class CarteUnePiece:
 
 class Case:
     #Classe contenant les informations d'une case dans une pièce
-    CASES_SOLIDES=["f","1"]
+    CASES_SOLIDES=["f","1","h","v","d","c"]
     
     def __init__(self, typeCaseF, collisionF):
         self.typeCase = typeCaseF
@@ -210,12 +211,21 @@ class Case:
         y_case = largeur*ligneF + Affichage.JEU.coords.yi
         #Position de la case
         
-        #On considère ici que la case vaut 0 ou 1, on affiche noir ou blanc
-##        if isinstance(self.typeCase, int):
-##            pygame.draw.rect(Affichage.ECRAN, (0,255,0), (x_case, y_case, hauteur, largeur))
-##        else:
         if self.typeCase == "1":
             Affichage.ECRAN.blit(Sprite.liste["sapin"].image,(x_case+Sprite.liste["sapin"].xi, y_case+Sprite.liste["sapin"].yi))
-        if self.typeCase == "f":
+        elif self.typeCase == "f":
             Affichage.ECRAN.blit(Sprite.liste["feudecamp"].image,(x_case+Sprite.liste["feudecamp"].xi, y_case+Sprite.liste["feudecamp"].yi))
+        elif self.typeCase=="h":
+             Affichage.ECRAN.blit(Sprite.liste["moufles"].image,(x_case+Sprite.liste["moufles"].xi, y_case+Sprite.liste["moufles"].yi))
+            #case où le joueur peut augmenter sa vie maximale
+        elif self.typeCase=="v":
+            Affichage.ECRAN.blit(Sprite.liste["raquettes"].image,(x_case+Sprite.liste["raquettes"].xi, y_case+Sprite.liste["raquettes"].yi))
+            #case où le joueur peut augmenter sa vitesse de déplacement
+        elif self.typeCase=="d":
+            Affichage.ECRAN.blit(Sprite.liste["bougies"].image,(x_case+Sprite.liste["bougies"].xi, y_case+Sprite.liste["bougies"].yi))
+            #case où le joueur peut augmenter la durabilité de son arme
+        elif self.typeCase=="c":
+            Affichage.ECRAN.blit(Sprite.liste["charbon"].image,(x_case+Sprite.liste["charbon"].xi, y_case+Sprite.liste["charbon"].yi))
+            #case de charbon, dans la pièce finale
+
             
