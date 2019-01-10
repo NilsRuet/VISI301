@@ -100,7 +100,7 @@ class Joueur(Perso):
         return self.piece_actuelle==num_sortie
 
     def affichage_vie(self):
-        rect_vie=(Affichage.VIE.coords.xi, Affichage.VIE.coords.yi, int(Affichage.VIE.largeur*(self.vie/self.max_vie)), Affichage.VIE.hauteur)
+        rect_vie = Affichage.rectangle_barre_progressive(Affichage.VIE.coords.xi, Affichage.VIE.coords.yi, Affichage.VIE.largeur, Affichage.VIE.hauteur, self.vie, self.max_vie)
         pygame.draw.rect(Affichage.ECRAN, (0, 127, 0), rect_vie)
 
     def attaquer(self):
@@ -115,6 +115,7 @@ class Joueur(Perso):
         if 0<=x_case<OptJeu.NB_CASES and 0<=y_case<OptJeu.NB_CASES:
             if piece.carte[x_case][y_case].typeCase == "f":
                 self.se_repose()
+                self.arme.restaurer_durabilite()
         
     def affichage(self):
         #Méthode d'affichage du joueur

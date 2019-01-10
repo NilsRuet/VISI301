@@ -51,6 +51,18 @@ class Affichage_vie:
         self.largeur = largeurF
         self.hauteur = hauteurF
 
+class Affichage_durabilite_arme:
+    def __init__(self, coordsF, largeurF, hauteurF):
+        self.coords = coordsF
+        self.largeur = largeurF
+        self.hauteur = hauteurF
+
+class Affichage_puissance_arme:
+    def __init__(self, coordsF, largeurF, hauteurF):
+        self.coords = coordsF
+        self.largeur = largeurF
+        self.hauteur = hauteurF
+        
 class Sprite:
     liste={}
     def __init__(self, file, nom, width, height, fix_width=True, fix_height=True, decalage_pourcent_x=0, decalage_pourcent_y=0):
@@ -99,9 +111,19 @@ class Affichage:
     
     taille_jeu = round(TAILLE_ECRAN[0]/2)
     #Jeu
+    
     largeur_vie = round((TAILLE_ECRAN[0]/2)-20)
-    hauteur_vie = round(largeur_vie/20)
+    hauteur_vie = round(largeur_vie/30)
     #Vie
+    
+    largeur_durabilite = round((TAILLE_ECRAN[0]/2)-20)
+    hauteur_durabilite = round(largeur_durabilite/30)
+    #Durabilite de l'arme
+
+    largeur_attaque = round((TAILLE_ECRAN[0]/4)-20)
+    hauteur_attaque = round(largeur_durabilite/30)
+    #Puissance d'attaque de l'arme
+    
     taille_carte = round((TAILLE_ECRAN[1]/1.5))
     #Carte
 
@@ -115,10 +137,18 @@ class Affichage:
     #Carte
     
     X_VIE, Y_VIE = (TAILLE_ECRAN[0]/2)+10, 10
+    X_DURABILITE, Y_DURABILITE = (TAILLE_ECRAN[0]/2)+10, Y_VIE+hauteur_vie+10
+    X_ATTAQUE, Y_ATTAQUE = (TAILLE_ECRAN[0]/2)+10, Y_DURABILITE+hauteur_durabilite+10
     #Vie
                        
     VIE=Affichage_vie(Coords(X_VIE, Y_VIE), largeur_vie, hauteur_vie)
+    DURABILITE=Affichage_vie(Coords(X_DURABILITE, Y_DURABILITE), largeur_durabilite, hauteur_durabilite)
+    ATTAQUE=Affichage_vie(Coords(X_ATTAQUE, Y_ATTAQUE), largeur_attaque, hauteur_attaque)
     JEU = Affichage_jeu(Coords(X_JEU, Y_JEU), taille_jeu)
     CARTE = Affichage_carte(Coords(X_CARTE, Y_CARTE), taille_carte)
-    #Initialisation des caractéristiques d'affichage de tous les éléments 
+    #Initialisation des caractéristiques d'affichage de tous les éléments
+
+    def rectangle_barre_progressive(x, y, largeur, hauteur, quantite, quantite_max, quantite_min=0):
+        rect=(x,y, int(largeur*((quantite-quantite_min)/(quantite_max-quantite_min))), hauteur)
+        return rect
     

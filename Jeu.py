@@ -111,11 +111,19 @@ class Jeu:
             self.arreter_jeu()
             self.entrer_gameover = False
             
+    def gerer_event_changement_attaque(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_d:
+                self.perso.arme.modifier_attaque(round(-self.perso.arme.max_attaque/10))
+            if event.key == pygame.K_f:
+                self.perso.arme.modifier_attaque(round(self.perso.arme.max_attaque/10))
+    
     def gerer_events(self):
         for event in pygame.event.get():
             self.gerer_event_quit(event)
             self.gerer_event_move(event)
             self.gerer_event_interaction(event)
+            self.gerer_event_changement_attaque(event)
             self.gerer_event_attaque(event)
             
     def gerer_actions_event(self):
@@ -160,6 +168,9 @@ class Jeu:
         self.laby.affiche_lab((Piece.listePieces[self.perso.piece_actuelle].i, Piece.listePieces[self.perso.piece_actuelle].j))
         #Affichage de la carte du labyrinthe
 
+        self.perso.arme.afficher_statistiques()
+        #Affichage des statistiques de l'arme
+        
         pygame.display.update()
 
     def arreter_jeu(self):
