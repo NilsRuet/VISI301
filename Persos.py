@@ -5,7 +5,6 @@ import pygame
 import random
 from Options import *
 from Affichage import *
-from Piece import *
 
 class Perso():
     #Classe de base pour tous les personnages mobiles
@@ -106,7 +105,17 @@ class Joueur(Perso):
 
     def attaquer(self):
         self.arme.attaquer()
-    
+
+    def se_repose(self):
+        self.vie = self.max_vie
+
+    def interagir(self, piece):
+        x_case = self.x + Perso.directions[self.direction][0]
+        y_case = self.y + Perso.directions[self.direction][1]
+        if 0<=x_case<OptJeu.NB_CASES and 0<=y_case<OptJeu.NB_CASES:
+            if piece.carte[x_case][y_case].typeCase == "f":
+                self.se_repose()
+        
     def affichage(self):
         #Méthode d'affichage du joueur
         #Méthode d'affichage d'un ennemi
@@ -209,7 +218,7 @@ class Ennemi(Perso):
             self.piece.ennemis[self.x, self.y] = self
                 
             self.last_mvt = pygame.time.get_ticks()
-
+    
     def attaquer(self, joueur):
         if [joueur.x-self.x,joueur.y-self.y] == Perso.directions[self.direction]:
             #Si le joueur est sur la case où l'ennemi veut se déplacer

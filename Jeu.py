@@ -12,6 +12,7 @@ from Affichage import *
 from Armes import *
 
 class Jeu:
+    touche_move_enfoncee = False
     def load_sprites():
         Sprite("ressources/neige.png","neige",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
         Sprite("ressources/sapin.png","sapin",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1],fix_height=False, decalage_pourcent_y=-50)
@@ -65,39 +66,39 @@ class Jeu:
         #Génération du personnage et de la pièce de départ
 
     def gerer_event_move(self, event):
-        touche_move=False
-        
         if event.type == pygame.KEYDOWN:
         #On lit les touches enfoncées, on modifie la direction du personnage en fonction
         #On indique aussi qu'une touche de direction est enfoncée
             if event.key == pygame.K_LEFT:
                 self.perso.direction = "GAUCHE"
-                touche_move = True
+                self.touche_move_enfoncee=True
             if event.key == pygame.K_RIGHT:
                 self.perso.direction = "DROITE"
-                touche_move = True
+                self.touche_move_enfoncee=True
             if event.key == pygame.K_UP:
                 self.perso.direction = "HAUT"
-                touche_move = True
+                self.touche_move_enfoncee=True
             if event.key == pygame.K_DOWN:
                 self.perso.direction = "BAS"
-                touche_move = True
+                self.touche_move_enfoncee=True
                 
         if event.type == pygame.KEYUP:
             #On lit les touches relâchées, pour arrêter un mouvement il faut que la direction du personnage
             #corresponde à la touche relâchée
             if event.key == pygame.K_LEFT and self.perso.direction == "GAUCHE":           
-                touche_move = False
+                self.touche_move_enfoncee = False
             if event.key == pygame.K_RIGHT and self.perso.direction == "DROITE":               
-                touche_move = False
+                self.touche_move_enfoncee = False
             if event.key == pygame.K_UP and self.perso.direction == "HAUT":              
-                touche_move = False
+                self.touche_move_enfoncee = False
             if event.key == pygame.K_DOWN and self.perso.direction == "BAS":               
-                touche_move = False
+               self.touche_move_enfoncee = False   
+        
+    def gerer_event_interaction(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                self.perso.interagir(CarteUnePiece.cartesChargees[self.perso.piece_actuelle])
                 
-        if touche_move:
-            self.perso.move(CarteUnePiece.cartesChargees[self.perso.piece_actuelle])
-
     def gerer_event_attaque(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
@@ -114,7 +115,13 @@ class Jeu:
         for event in pygame.event.get():
             self.gerer_event_quit(event)
             self.gerer_event_move(event)
+            self.gerer_event_interaction(event)
             self.gerer_event_attaque(event)
+            
+    def gerer_actions_event(self):
+        if self.touche_move_enfoncee:
+            self.perso.move(CarteUnePiece.cartesChargees[self.perso.piece_actuelle])
+
 
     def executer_actions_ennemis(self):
         CarteUnePiece.cartesChargees[self.perso.piece_actuelle].action_ennemis(self.perso)
@@ -178,6 +185,7 @@ class Jeu:
     def executer_jeu(self):
         while self.continuer:
             self.gerer_events()
+            self.gerer_actions_event()
             Piece.listePieces[self.perso.piece_actuelle].revele(self.laby)
             self.executer_actions_ennemis()
             self.gerer_etat_jeu()
