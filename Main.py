@@ -3,8 +3,9 @@
 
 #Importations
 import pygame
-from Menu import *
-from Jeu  import *
+from Menu    import *
+from Jeu     import *
+from Options import *
 
 #Initialisations pygame
 pygame.init()
@@ -15,24 +16,27 @@ pygame.display.set_caption("Jeu")
 Affichage.ECRAN.fill((0,0,0))
 ###########################################################################################
 def choix_menu_principal():
-    menu = Menu((255,0,0), ["Jouer", "Tutoriel", "Options", "Quitter"],
-                Affichage.TAILLE_ECRAN[1]/2-(150*Affichage.TAILLE_ECRAN[1]/600),
-                200, (80*Affichage.TAILLE_ECRAN[1]/600), 25, "Menu Principal",
-                Affichage.TAILLE_ECRAN[1]/2-(265*Affichage.TAILLE_ECRAN[1]/600),
-                int(70*Affichage.TAILLE_ECRAN[1]/600))
-    
+    menu = menu_principal()
     action = menu.lance_menu(Affichage.ECRAN)
+    options = OptJeu() #On définit des options par défaut
     return action
 
 def traiter_choix_menu_principal(action):
     fin_utilisation=False
-    if action==0:
+    if action==0: #Jouer
         enjeu=True
         while enjeu:
             jeu = Jeu()
             jeu.executer_jeu()
             enjeu=jeu.rejouer
-    elif action==3:
+
+##    elif action == 1 :  #Tutoriel
+##        lance_tutoriel()
+        
+    elif action ==2: #Options
+        lance_options(options)
+        
+    elif action==3: #Quitter
         fin_utilisation=True
 
     return not fin_utilisation
