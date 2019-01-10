@@ -22,6 +22,9 @@ class Piece:
         #Coordonnées de la pièce dans le labyrinthe
 
     def initListePieces(labyF):
+        nbTypeRepos = 0
+        #nombre de pièces de type "repos"
+        
         #Generation temporaire de la carte globale
         for i in range(0,labyF.taille, 2):
             for j in range(0,labyF.taille, 2):
@@ -33,17 +36,19 @@ class Piece:
                     typePiece = "arrivee"
                 else:
                     rndm_type = random.random()
-                    if rndm_type<=0.1:
+                    if rndm_type<=0.1 and nbTypeRepos<2:
+                        #Limitation du nombre maximal de pièces de repos
+                        #(en plus de la pièce de départ)
                         typePiece = "repos"
+                        nbTypeRepos = nbTypeRepos+1       
                     elif rndm_type<=0.4:
                         typePiece = "ennemi01"
                     elif rndm_type<=0.7:
                         typePiece = "ennemi02"
                     else:
                         typePiece = "ennemi03"
-                #On choisit son type aléatoirement et on la crée ensuite
+                #On choisit son type "aléatoirement" et on la crée ensuite
                 Piece.listePieces[numPiece] = Piece(numPiece,typePiece, i, j)
-
 
     def revele(self, labyF):
         #Permet de charger la carte d'une pièce si elle n'a jamais été chargée
@@ -177,11 +182,11 @@ class Case:
         #Position de la case
         
         #On considère ici que la case vaut 0 ou 1, on affiche noir ou blanc
-        if isinstance(self.typeCase, int):
-            pygame.draw.rect(Affichage.ECRAN, (0,255,0), (x_case, y_case, hauteur, largeur))
-        else:
-            if self.typeCase == "1":
-                Affichage.ECRAN.blit(Sprite.liste["sapin"].image,(x_case+Sprite.liste["sapin"].xi, y_case+Sprite.liste["sapin"].yi))
-            if self.typeCase == "f":
-                Affichage.ECRAN.blit(Sprite.liste["feudecamp"].image,(x_case+Sprite.liste["feudecamp"].xi, y_case+Sprite.liste["feudecamp"].yi))
+##        if isinstance(self.typeCase, int):
+##            pygame.draw.rect(Affichage.ECRAN, (0,255,0), (x_case, y_case, hauteur, largeur))
+##        else:
+        if self.typeCase == "1":
+            Affichage.ECRAN.blit(Sprite.liste["sapin"].image,(x_case+Sprite.liste["sapin"].xi, y_case+Sprite.liste["sapin"].yi))
+        if self.typeCase == "f":
+            Affichage.ECRAN.blit(Sprite.liste["feudecamp"].image,(x_case+Sprite.liste["feudecamp"].xi, y_case+Sprite.liste["feudecamp"].yi))
             
