@@ -1,5 +1,6 @@
 import pygame
 from Affichage import *
+from Options   import *
 
 class Bouton:
     #Classe permettant de gérer un bouton rectangulaire dans un menu
@@ -36,7 +37,7 @@ class Menu:
         self.couleur_boutons = couleurs_boutons
         self.noms_menus = noms_menus #tableau de chaines de caractères
         self.largeur = int(largeur * Affichage.TAILLE_ECRAN[1]/600)
-        self.hauteur = int(hauteur * Affichage.TAILLE_ECRAN[0]/1000)
+        self.hauteur = int(hauteur * Affichage.TAILLE_ECRAN[1]/600)
         self.posX = Affichage.TAILLE_ECRAN[0]/2-(self.largeur/2) #centré
         self.posY = posY #Position du premier bouton
         self.distance_boutons = int(self.hauteur + distance_boutons * (Affichage.TAILLE_ECRAN[1]/1000))
@@ -107,3 +108,163 @@ class Menu:
             
 
         return action #possibilité de réutiliser le résultat pour savoir quel programme lancer
+    
+###############################################################################################################################################
+#définition et gestion de menus utilisés dans le programme :
+def menu_principal():
+    #menu d'accueil du jeu
+    menu = Menu((255,0,0), ["Jouer", "Tutoriel", "Options", "Quitter"],
+                Affichage.TAILLE_ECRAN[1]/2-(150*Affichage.TAILLE_ECRAN[1]/600),
+                200, 80, (25*Affichage.TAILLE_ECRAN[1]/600), "Menu Principal",
+                Affichage.TAILLE_ECRAN[1]/2-(265*Affichage.TAILLE_ECRAN[1]/600),
+                int(70*Affichage.TAILLE_ECRAN[1]/600))
+    return menu
+
+#################################################################################################################################################################
+
+def menu_options():
+    #menu des options du jeu
+    menu = Menu((255,0,0), ["Taille de la fenêtre", "Taille du labyrinthe", "Difficulté du labyrinthe", "Difficulté des ennemis", "Revenir au menu principal"],
+                Affichage.TAILLE_ECRAN[1]/2-(150*Affichage.TAILLE_ECRAN[1]/600),
+                700, 70, (25*Affichage.TAILLE_ECRAN[1]/600), "Options",
+                Affichage.TAILLE_ECRAN[1]/2-(265*Affichage.TAILLE_ECRAN[1]/600),
+                int(70*Affichage.TAILLE_ECRAN[1]/600))
+    
+    return menu
+
+def lance_options():
+    continuer = True
+    
+    #On détermine la première chose à afficher (menu options)
+    menu = menu_options()
+    
+    while continuer:
+        action = menu.lance_menu(Affichage.ECRAN)
+        
+        if   action == 0: #Taille de la fenêtre
+            lance_taille_fenetre()
+        elif action == 1: #Taille du labyrinthe
+            lance_taille_laby()
+        elif action == 2: #Difficulté du labyrinthe
+            lance_diff_laby()
+        elif action == 3: #Difficulté des ennemis
+            lance_diff_ennemis()
+        elif action == 4: #Revenir au menu principal
+            continuer = False
+
+####################################################################################################################################################################"
+
+def menu_taille_fenetre():
+    menu = Menu((255,0,0), ["500", "600", "700", "800", "Retour"],
+                Affichage.TAILLE_ECRAN[1]/2-(180*Affichage.TAILLE_ECRAN[1]/600),
+                250, 80, (25*Affichage.TAILLE_ECRAN[1]/600), "Hauteur de la fenêtre",
+                Affichage.TAILLE_ECRAN[1]/2-(265*Affichage.TAILLE_ECRAN[1]/600),
+                int(70*Affichage.TAILLE_ECRAN[1]/600))
+        
+    return menu
+
+def lance_taille_fenetre():
+    continuer = True
+    
+    #On détermine la première chose à afficher (menu taille fenetre)
+    menu = menu_taille_fenetre()
+    
+    while continuer:
+        action = menu.lance_menu(Affichage.ECRAN)
+        
+        if   action == 0: #500
+            a=4
+        elif action == 1: #600
+            a=4
+        elif action == 2: #700
+            a=4
+        elif action == 3: #800
+            a=4
+        elif action == 4: #Retour
+            continuer = False
+
+####################################################################################################################################################################"
+
+def menu_taille_laby():
+    menu = Menu((255,0,0), ["Petit", "Moyen", "Grand", "Retour"],
+                Affichage.TAILLE_ECRAN[1]/2-(150*Affichage.TAILLE_ECRAN[1]/600),
+                200, 80, (25*Affichage.TAILLE_ECRAN[1]/600), "Taille du labyrinthe",
+                Affichage.TAILLE_ECRAN[1]/2-(265*Affichage.TAILLE_ECRAN[1]/600),
+                int(70*Affichage.TAILLE_ECRAN[1]/600))
+    return menu
+
+def lance_taille_laby():
+    continuer = True
+    
+    #On détermine la première chose à afficher (menu taille laby)
+    menu = menu_taille_laby()
+    
+    while continuer:
+        action = menu.lance_menu(Affichage.ECRAN)
+        
+        if   action == 0: #Petit
+            a = 4
+        elif action == 1: #Moyen
+            a = 4
+        elif action == 2: #Grand
+            a = 4
+        elif action == 3: #Retour
+            continuer = False
+    
+
+####################################################################################################################################################################"
+
+def menu_diff_laby():
+    menu = Menu((255,0,0), ["Faible", "Moyenne", "Elevée", "Retour"],
+                Affichage.TAILLE_ECRAN[1]/2-(150*Affichage.TAILLE_ECRAN[1]/600),
+                250, (80*Affichage.TAILLE_ECRAN[1]/600), (25*Affichage.TAILLE_ECRAN[1]/600), "Difficulté du labyrinthe",
+                Affichage.TAILLE_ECRAN[1]/2-(265*Affichage.TAILLE_ECRAN[1]/600),
+                int(70*Affichage.TAILLE_ECRAN[1]/600))
+    return menu
+
+def lance_diff_laby():
+    continuer = True
+    
+    #On détermine la première chose à afficher (menu diff laby)
+    menu = menu_diff_laby()
+    
+    while continuer:
+        action = menu.lance_menu(Affichage.ECRAN)
+        
+        if   action == 0: #Faible
+            a = 4
+        elif action == 1: #Moyenne
+            a = 4
+        elif action == 2: #Elevée
+            a = 4
+        elif action == 3: #Retour
+            continuer = False
+
+####################################################################################################################################################################"
+
+def menu_diff_ennemis():
+    menu = Menu((255,0,0), ["Faible", "Moyenne", "Elevée", "Retour"],
+                Affichage.TAILLE_ECRAN[1]/2-(150*Affichage.TAILLE_ECRAN[1]/600),
+                250, 80, (25*Affichage.TAILLE_ECRAN[1]/600), "Difficulté des ennemis",
+                Affichage.TAILLE_ECRAN[1]/2-(265*Affichage.TAILLE_ECRAN[1]/600),
+                int(70*Affichage.TAILLE_ECRAN[1]/600))
+    return menu
+
+def lance_diff_ennemis():
+    continuer = True
+    
+    #On détermine la première chose à afficher (menu diff ennemis)
+    menu = menu_diff_ennemis()
+    
+    while continuer:
+        action = menu.lance_menu(Affichage.ECRAN)
+        
+        if   action == 0: #Faible
+            a = 4
+        elif action == 1: #Moyenne
+            a = 4
+        elif action == 2: #Elevée
+            a = 4
+        elif action == 3: #Retour
+            continuer = False
+    
