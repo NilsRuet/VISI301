@@ -6,6 +6,7 @@ import pygame
 from Menu    import *
 from Jeu     import *
 from Options import *
+from Affichage import *
 
 #Initialisations pygame
 pygame.init()
@@ -19,9 +20,9 @@ def choix_menu_principal():
     menu = menu_principal()
     action = menu.lance_menu(Affichage.ECRAN)
     options = OptJeu() #On définit des options par défaut
-    return action
+    return action, options
 
-def traiter_choix_menu_principal(action):
+def traiter_choix_menu_principal(action, options):
     fin_utilisation=False
     if action==0: #Jouer
         enjeu=True
@@ -35,6 +36,8 @@ def traiter_choix_menu_principal(action):
         
     elif action ==2: #Options
         lance_options(options)
+        Affichage.init(options.hauteur_fenetre)
+        options.applique_changements()
         
     elif action==3: #Quitter
         fin_utilisation=True
@@ -44,8 +47,8 @@ def traiter_choix_menu_principal(action):
 #Programme principal
 continuer = True
 while continuer:
-    action = choix_menu_principal()
-    continuer = traiter_choix_menu_principal(action)
+    action, options = choix_menu_principal()
+    continuer = traiter_choix_menu_principal(action, options)
 
 
 #Quitter l'application

@@ -179,8 +179,7 @@ def lance_taille_fenetre(options):
             options.set_hauteur_fenetre(700)
         elif action == 3: #800
             options.set_hauteur_fenetre(800)
-        elif action == 4: #Retour
-            continuer = False
+        continuer = False
 
 ####################################################################################################################################################################"
 
@@ -207,8 +206,7 @@ def lance_taille_laby(options):
             options.set_taille_laby(10)
         elif action == 2: #Grand
             options.set_taille_laby(15)
-        elif action == 3: #Retour
-            continuer = False
+        continuer = False
     
 
 ####################################################################################################################################################################"
@@ -236,8 +234,7 @@ def lance_diff_laby(options):
             options.set_difficulte_laby("moyenne")
         elif action == 2: #Elevée
             options.set_difficulte_laby("élevée")
-        elif action == 3: #Retour
-            continuer = False
+        continuer = False
 
 ####################################################################################################################################################################"
 
@@ -264,6 +261,5 @@ def lance_diff_ennemis(options):
             options.set_difficulte_ennemi("moyenne")
         elif action == 2: #Elevée
             options.set_difficulte_ennemi("élevée")
-        elif action == 3: #Retour
-            continuer = False
+        continuer = False
     

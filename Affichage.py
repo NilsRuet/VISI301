@@ -108,58 +108,63 @@ class Sprite:
         
 class Affichage:
     #Initialisation de la fenêtre
-    hauteur_ecran = 600
-    TAILLE_ECRAN = (hauteur_ecran*2, hauteur_ecran) #largeur / hauteur
-    ECRAN = pygame.display.set_mode(TAILLE_ECRAN)
+    def init(hauteur_ecran=600):
+        TAILLE_ECRAN = (hauteur_ecran*2, hauteur_ecran) #largeur / hauteur
 
-    #Taille des éléments
+        #Taille des éléments
     
-    taille_jeu = round(TAILLE_ECRAN[0]/2)
-    #Jeu
+        taille_jeu = round(TAILLE_ECRAN[0]/2)
+        #Jeu
     
-    largeur_vie = round((TAILLE_ECRAN[0]/2)-20)
-    hauteur_vie = round(largeur_vie/30)
-    #Vie
+        largeur_vie = round((TAILLE_ECRAN[0]/2)-20)
+        hauteur_vie = round(largeur_vie/30)
+        #Vie
     
-    largeur_durabilite = round((TAILLE_ECRAN[0]/2)-20)
-    hauteur_durabilite = round(largeur_durabilite/30)
-    #Durabilite de l'arme
+        largeur_durabilite = round((TAILLE_ECRAN[0]/2)-20)
+        hauteur_durabilite = round(largeur_durabilite/30)
+        #Durabilite de l'arme
 
-    largeur_attaque = round((TAILLE_ECRAN[0]/4)-20)
-    hauteur_attaque = round(largeur_durabilite/30)
-    #Puissance d'attaque de l'arme
+        largeur_attaque = round((TAILLE_ECRAN[0]/4)-20)
+        hauteur_attaque = round(largeur_durabilite/30)
+        #Puissance d'attaque de l'arme
     
-    taille_carte = round((TAILLE_ECRAN[1]/1.5))
-    #Carte
+        taille_carte = round((TAILLE_ECRAN[1]/1.5))
+        #Carte
 
-    taille_points = TAILLE_ECRAN[1]//10
+        taille_points = TAILLE_ECRAN[1]//10
 
-    #Positions des éléments
+        #Positions des éléments
 
-    X_JEU, Y_JEU = 0, 0
-    #Jeu
+        X_JEU, Y_JEU = 0, 0
+        #Jeu
       
-    Y_CARTE = round((TAILLE_ECRAN[1]-taille_carte)/2)
-    X_CARTE = round(taille_jeu+1+taille_carte/10)
-    #Carte
+        Y_CARTE = round((TAILLE_ECRAN[1]-taille_carte)/2)
+        X_CARTE = round(taille_jeu+1+taille_carte/10)
+        #Carte
     
-    X_VIE, Y_VIE = (TAILLE_ECRAN[0]/2)+10, 10
-    X_DURABILITE, Y_DURABILITE = (TAILLE_ECRAN[0]/2)+10, Y_VIE+hauteur_vie+10
-    X_ATTAQUE, Y_ATTAQUE = (TAILLE_ECRAN[0]/2)+10, Y_DURABILITE+hauteur_durabilite+10
-    #Vie
+        X_VIE, Y_VIE = (TAILLE_ECRAN[0]/2)+10, 10
+        X_DURABILITE, Y_DURABILITE = (TAILLE_ECRAN[0]/2)+10, Y_VIE+hauteur_vie+10
+        X_ATTAQUE, Y_ATTAQUE = (TAILLE_ECRAN[0]/2)+10, Y_DURABILITE+hauteur_durabilite+10
+        #Vie
 
-    X_POINTS, Y_POINTS = X_CARTE, round(Y_CARTE+taille_carte*1.1+10)
-    #Points du joueurs
+        X_POINTS, Y_POINTS = X_CARTE, round(Y_CARTE+taille_carte*1.1+10)
+        #Points du joueurs
+
+
+        Affichage.TAILLE_ECRAN = TAILLE_ECRAN
+        Affichage.ECRAN = pygame.display.set_mode(TAILLE_ECRAN)
                        
-    VIE=Affichage_vie(Coords(X_VIE, Y_VIE), largeur_vie, hauteur_vie)
-    DURABILITE=Affichage_vie(Coords(X_DURABILITE, Y_DURABILITE), largeur_durabilite, hauteur_durabilite)
-    ATTAQUE=Affichage_vie(Coords(X_ATTAQUE, Y_ATTAQUE), largeur_attaque, hauteur_attaque)
-    JEU = Affichage_jeu(Coords(X_JEU, Y_JEU), taille_jeu)
-    CARTE = Affichage_carte(Coords(X_CARTE, Y_CARTE), taille_carte)
-    POINTS = Affichage_points(Coords(X_POINTS, Y_POINTS), taille_points)
+        Affichage.VIE=Affichage_vie(Coords(X_VIE, Y_VIE), largeur_vie, hauteur_vie)
+        Affichage.DURABILITE=Affichage_vie(Coords(X_DURABILITE, Y_DURABILITE), largeur_durabilite, hauteur_durabilite)
+        Affichage.ATTAQUE=Affichage_vie(Coords(X_ATTAQUE, Y_ATTAQUE), largeur_attaque, hauteur_attaque)
+        Affichage.JEU = Affichage_jeu(Coords(X_JEU, Y_JEU), taille_jeu)
+        Affichage.CARTE = Affichage_carte(Coords(X_CARTE, Y_CARTE), taille_carte)
+        Affichage.POINTS = Affichage_points(Coords(X_POINTS, Y_POINTS), taille_points)
     #Initialisation des caractéristiques d'affichage de tous les éléments
+    
 
     def rectangle_barre_progressive(x, y, largeur, hauteur, quantite, quantite_max, quantite_min=0):
         rect=(x,y, int(largeur*((quantite-quantite_min)/(quantite_max-quantite_min))), hauteur)
         return rect
     
+Affichage.init()
