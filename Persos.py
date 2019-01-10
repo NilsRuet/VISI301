@@ -130,7 +130,7 @@ class Joueur(Perso):
 
             if self.points>0:
                 if piece.carte[x_case][y_case].typeCase == "h":
-                    self.max_vie+=15
+                    self.max_vie+=10
                     self.points-=1
                 if piece.carte[x_case][y_case].typeCase == "v":
                     self.vitesse*=0.95
@@ -170,15 +170,30 @@ class Ennemi(Perso):
         #Même conditions que tous les personnages mobiles, mais ne peut pas aller sur la même case qu'un joueur
 
     
-    def __init__(self,x,y,pieceF,width=Affichage.JEU.taille_case[0],height=Affichage.JEU.taille_case[1]):
+    def __init__(self,x,y,pieceF,distance, distance_max,width=Affichage.JEU.taille_case[0],height=Affichage.JEU.taille_case[1]):
         #Création d'un ennemi, avec des valeurs par défaut pour la largeur et la hauteur
-        
+        proximite_fin = ((distance_max-distance)/distance_max)
+        if OptJeu.DIFFICULTE_ENNEMI == "facile":
+            difficulte = 0.75
+        elif OptJeu.DIFFICULTE_ENNEMI == "moyenne":
+            difficulte = 1
+        else:
+            difficulte = 1.25
+            
         Perso.__init__(self,x,y,width,height,Ennemi.VITESSE)
-        self.vie = Ennemi.VIE_DEPART
-        self.attaque = Ennemi.ATTAQUE
+        
+        self.vie = (Ennemi.VIE_DEPART*difficulte)+(0.5*proximite_fin)*Ennemi.VIE_DEPART*difficulte
+        #La vie augmente linéairement jusqu'au double de celle de base (en difficulté moyenne)
+        
+        self.attaque = (Ennemi.ATTAQUE*difficulte)+(0.5*proximite_fin)*Ennemi.ATTAQUE*difficulte
+        #L'attaque augmente linéairement jusqu'au double de celle de base (en difficulté moyenne)
+        
+        self.vitesse*=(1/difficulte)*(0.80+0.20*(1-proximite_fin))
+        
         self.vitesse_attaque = Ennemi.VITESSE_ATTAQUE
         self.last_attaque = 0
         self.piece = pieceF
+
 
     def action(self, joueur):
         #Gestionnaire des actions réalisées par un ennemi

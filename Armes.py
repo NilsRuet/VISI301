@@ -16,7 +16,7 @@ class Arme():
 class Melee(Arme):
     MAX_ATTAQUE_INIT = round(sqrt(1000))
     MIN_ATTAQUE_INIT = 1
-    DURABILITE_INIT = 1000
+    DURABILITE_INIT = 2000
     #Classe correspondant à une arme à courte portée
     def __init__(self, persoF, attaqueF, vit_attaqueF):
         Arme.__init__(self, persoF, attaqueF, vit_attaqueF)

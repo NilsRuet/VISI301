@@ -10,12 +10,13 @@ from Persos import *
 class Piece:
     #Classe contenant les caractéristiques d'une pièce dans le labyrinthe
     listePieces={}
+    distance_arrivee_max=0
     
     def __init__(self, numPieceF, typePiece, iF, jF):
         self.numPiece=numPieceF
         self.typePiece=typePiece
         #Numéro de la pièce dans le labyrinthe et son stype
-        self.vue=True
+        self.vue=False
         #Booléen vrai si le joueur est déjà entré dans la pièce (=si la pièce a été générée pour l'instant)
         self.i = iF
         self.j = jF
@@ -47,6 +48,7 @@ class Piece:
 
         #On calcule les distances de chaque piece une fois toutes générées et on récupère l'emplacement du départ
         num_depart = Piece.calcule_distances(labyF)
+        Piece.distance_arrivee_max = Piece.listePieces[num_depart].distance_arrivee
         labyF.placer_depart(num_depart)
         Piece.listePieces[num_depart].typePiece = "depart"
 
@@ -127,8 +129,8 @@ class CarteUnePiece:
                 #On lit chaque ligne caractère par caractère
                 val = ligne[num_col]
                 if val=="e":
-                    if random.random()<0.25:#Constante jusqu'à l'augmentation de difficulté
-                        self.ennemis[num_col, num_ligne] = Ennemi(num_col, num_ligne, self)
+                    if random.random()<0.25:
+                        self.ennemis[num_col, num_ligne] = Ennemi(num_col, num_ligne, self, Piece.listePieces[self.numPiece].distance_arrivee,Piece.distance_arrivee_max)
                 elif val=="a":
                     val = random.choice(["0","1"])
                     
