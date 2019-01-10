@@ -14,10 +14,46 @@ class Arme():
         self.last_attaque = 0
 
 class Melee(Arme):
+    MAX_ATTAQUE_INIT = 20
+    MIN_ATTAQUE_INIT = 1
+    DURABILITE_INIT = 1000
     #Classe correspondant à une arme à courte portée
     def __init__(self, persoF, attaqueF, vit_attaqueF):
         Arme.__init__(self, persoF, attaqueF, vit_attaqueF)
+        self.max_attaque = Melee.MAX_ATTAQUE_INIT
+        self.min_attaque = Melee.MIN_ATTAQUE_INIT
+        self.durabilite = Melee.DURABILITE_INIT
+        self.max_durabilite = Melee.DURABILITE_INIT
 
+    def modifier_attaque(self, montant):
+        #Modification de l'attaque de l'arme
+        if self.durabilite>0:
+            self.attaque+=montant
+            if self.attaque>self.max_attaque:
+                #On limite l'attaque à une attaque maximale
+                self.attaque=self.max_attaque
+            
+            if self.attaque<self.min_attaque:
+                #On limite l'attaque à une attaque minimale
+                self.attaque=self.min_attaque
+
+    def enlever_durabilite(self, attaque):
+        #Chaque fois qu'on attaque et qu'il reste de la durabilité, l'arme perd en durabilité
+        if self.durabilite>0:
+            self.durabilite -= attaque**2
+            #On veut que le cout en durabilité augmente plus rapidement que la puissance d'attaque
+            if self.durabilite<=0:
+                #Si on a plus de durabilite, l'attaque de l'arme passe au minimum
+                #Et la vitesse d'attaque est fortement diminuée
+                self.durabilite=0
+                self.vitesse_attaque*=2
+                self.attaque=self.min_attaque
+
+    def restaurer_durabilite(self):
+        if self.durabilite<=0:
+            self.vitesse_attaque=self.vitesse_attaque//2
+        self.durabilite = self.max_durabilite
+        
     def attaquer(self):
         if pygame.time.get_ticks() - self.last_attaque > self.vitesse_attaque:
             x_case_att = self.owner.x + Perso.directions[self.owner.direction][0]
@@ -30,6 +66,15 @@ class Melee(Arme):
             if ennemi!=None:
                 ennemi.vie-=self.attaque
                 self.last_attaque = pygame.time.get_ticks()
+                self.enlever_durabilite(self.attaque)
                 if ennemi.vie<=0:
                     ennemi.meurt()
+
+        
+    def afficher_statistiques(self):
+        x_dura,y_dura,largeur_dura,hauteur_dura=Affichage.DURABILITE.coords.xi, Affichage.DURABILITE.coords.yi, Affichage.DURABILITE.largeur, Affichage.DURABILITE.hauteur
+        pygame.draw.rect(Affichage.ECRAN, (200, 64, 0),Affichage.rectangle_barre_progressive(x_dura, y_dura, largeur_dura, hauteur_dura, self.durabilite, self.max_durabilite))
+
+        x_att,y_att,largeur_att,hauteur_att=Affichage.ATTAQUE.coords.xi, Affichage.ATTAQUE.coords.yi, Affichage.ATTAQUE.largeur, Affichage.ATTAQUE.hauteur
+        pygame.draw.rect(Affichage.ECRAN, (200, 0, 0),Affichage.rectangle_barre_progressive(x_att,y_att,largeur_att,hauteur_att, self.attaque, self.max_attaque, self.min_attaque))
     

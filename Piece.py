@@ -20,27 +20,22 @@ class Piece:
         self.i = iF
         self.j = jF
         #Coordonnées de la pièce dans le labyrinthe
+        self.distance_arrivee = -1
+        #Distance de la piece par rapport à l'arrivee du labyrinthe (en pieces à parcourir)
+        #Vaut -1 avant que le labyrinthe n'ait été généré
 
     def initListePieces(labyF):
-        nbTypeRepos = 0
-        #nombre de pièces de type "repos"
-        
-        #Generation temporaire de la carte globale
+        #Generation de la carte globale
         for i in range(0,labyF.taille, 2):
             for j in range(0,labyF.taille, 2):
                 #Pour chaque pièce
                 numPiece = labyF.carte[i][j].zone
-                if labyF.depart == numPiece:
-                    typePiece = "depart"
-                elif labyF.arrivee == numPiece:
+                if labyF.arrivee == numPiece:
                     typePiece = "arrivee"
                 else:
                     rndm_type = random.random()
-                    if rndm_type<=0.1 and nbTypeRepos<2:
-                        #Limitation du nombre maximal de pièces de repos
-                        #(en plus de la pièce de départ)
-                        typePiece = "repos"
-                        nbTypeRepos = nbTypeRepos+1       
+                    if rndm_type<=0.1:
+                        typePiece = "repos"   
                     elif rndm_type<=0.4:
                         typePiece = "ennemi01"
                     elif rndm_type<=0.7:
@@ -50,6 +45,40 @@ class Piece:
                 #On choisit son type "aléatoirement" et on la crée ensuite
                 Piece.listePieces[numPiece] = Piece(numPiece,typePiece, i, j)
 
+        #On calcule les distances de chaque piece une fois toutes générées et on récupère l'emplacement du départ
+        num_depart = Piece.calcule_distances(labyF)
+        labyF.placer_depart(num_depart)
+        Piece.listePieces[num_depart].typePiece = "depart"
+
+    def calcule_distances(labyF):
+        def traite_voisines_piece(numPiece, liste_pieces_traitees):
+            #Traite une piece de la liste des pieces dont on veut la distance et rajoute ses pieces voisines à la fin
+            #Ainsi on traite les pieces dans l'ordre de distance par rapport à la piece d'arrivée
+            piece_courante = Piece.listePieces[numPiece]
+            voisines=[]
+            for coords in ((0,2),(0,-2),(2,0),(-2,0)):
+                #Coordonnées des pièces voisines dans la carte du laby
+                if 0 <= piece_courante.i+coords[0] < labyF.taille and 0 <= piece_courante.j+coords[1] < labyF.taille:
+                    #On regarde si la pièce voisine qu'on selectionne est dans le labyrinthe
+                    if not labyF.carte[piece_courante.i+(coords[0]//2)][piece_courante.j+(coords[1]//2)]:
+                        #On vérifie qu'il n'y a pas de mur entre le piece actuelle et elle
+                        num_voisine = labyF.carte[piece_courante.i+coords[0]][piece_courante.j+(coords[1])].zone
+                        if Piece.listePieces[num_voisine].distance_arrivee==-1:
+                            #On vérifie que la piece n'a pas déjà été traitée (distance -1)
+                            Piece.listePieces[num_voisine].distance_arrivee=piece_courante.distance_arrivee+1
+                            #On donne la valeur de sa distance à l'arrivée
+                            liste_pieces_traitees.append(num_voisine)
+
+        Piece.listePieces[labyF.arrivee].distance_arrivee=0             
+        pieces_traitees = [labyF.arrivee]
+        i = 0
+        while i<len(pieces_traitees):
+            traite_voisines_piece(pieces_traitees[i],pieces_traitees)
+            i+=1
+        return pieces_traitees[-1]
+        #On renvoie le numero de la piece la plus éloignée de l'arrivee
+                                                                              
+    
     def revele(self, labyF):
         #Permet de charger la carte d'une pièce si elle n'a jamais été chargée
         if not self.numPiece in CarteUnePiece.cartesChargees:

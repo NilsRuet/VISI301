@@ -3,6 +3,7 @@
 
 import random
 from Affichage import *
+from Options import *
 from Piece import *
 
 class Zone:
@@ -10,6 +11,7 @@ class Zone:
     def __init__(self, nb):
         self.zone = nb
         #Numero de la case
+
         self.suiv=None
         #Case à laquelle est rattaché cette case
         
@@ -38,15 +40,23 @@ class Zone:
 class Labyrinthe:
     #Classe représentant un labyrinthe
     
-    def __init__(self, taille):
-        self.carte=["+"]*(2*taille-1)
-        self.taille = 2*taille-1
+    def __init__(self, nb_salles_par_ligne):
         self.nb_zones=0
+        self.taille = 2*nb_salles_par_ligne-1
+        self.init_struct_carte_lab(self.taille)
+        self.creer_lab_parfait()
+        if OptJeu.DIFFICULTE_LABY == "moyenne":
+            self.enlever_murs(1/4)
+        elif OptJeu.DIFFICULTE_LABY == "facile":
+            self.enlever_murs(1/2)
         
-        #Initialisation des zones (= pièces) du labyrinthe
+        self.arrivee = random.randint(1,self.nb_zones)
+    
+    def init_struct_carte_lab(self, taille):
+        self.carte=["+"]*(taille)
         for colonne in range(len(self.carte)):
-            self.carte[colonne]=["+"]*(2*taille-1)
-        
+            self.carte[colonne]=["+"]*(taille)
+            
         #Initialisation des zones (= pièces) du labyrinthe
         for colonne in range(0,len(self.carte),2):
             for ligne in range(0,len(self.carte[0]),2):
@@ -63,6 +73,7 @@ class Labyrinthe:
             for ligne in range(1,len(self.carte[0]),2):
                 self.carte[colonne][ligne]=True          
 
+    def creer_lab_parfait(self):
         #Début de l'algorithme de génération
         #On liste les murs du labyrinthes
         liste_murs=[]
@@ -101,46 +112,37 @@ class Labyrinthe:
                 salle1.devient(salle2)                
                 self.carte[x][y]=False
 
-        self.depart = random.randint(1,self.nb_zones)
-        self.arrivee = random.randint(1,self.nb_zones)
-        while self.arrivee==self.depart:
-            self.arrivee = random.randint(1,self.nb_zones)
-        #On choisit au hasard deux cases du labyrinthe différentes qui seront l'arrivée et le départ
-            
+    def enlever_murs(self, proportion):
+        liste_murs=[]
+        #On liste les murs verticaux
+        for colonne in range(1,len(self.carte), 2):
+            for ligne in range(0,len(self.carte[0]),2):
+                if self.carte[colonne][ligne]:
+                    liste_murs.append((colonne,ligne))
+
+        #On liste les murs horizontaux
+        for colonne in range(0,len(self.carte), 2):
+            for ligne in range(1,len(self.carte[0]),2):
+                if self.carte[colonne][ligne]:
+                    liste_murs.append((colonne,ligne))
+
+        random.shuffle(liste_murs)
+        for i in range(0,round(proportion*len(liste_murs))):
+            self.carte[liste_murs[i][0]][liste_murs[i][1]]=False
+          
     def brisable(self, salle1, salle2):
         #Méthode permettant de savoir si deux salles n'appartiennent pas à la même zone
         #donc si le mur entre ces deux salles peut etre briser sans créer de boucle
         num1 = self.carte[salle1[0]][salle1[1]].get_zone()
         num2 = self.carte[salle2[0]][salle2[1]].get_zone()
         return num1!=num2
-    
-    def print_lab(self, piece_actu=(0,0)):
-        #Méthode permettant l'affichage du labyrinthe dans la console
-        print("-"*(len(self.carte)*2+3))
-        for i in range(len(self.carte)):
-            ligne="| "
-            for j in range(len(self.carte[0])):
-                if i==piece_actu[0] and j==piece_actu[1]:
-                    ligne+="{:^2}".format("*")
-                elif isinstance(self.carte[i][j], Zone):
-                    ligne+="{:^2}".format(" ")
-                elif isinstance(self.carte[i][j], bool):
-                    if self.carte[i][j]:
-                        if i%2 == 0:
-                            c="+"
-                        else:
-                            c="+"
-                        ligne+="{:^2}".format(c)
-                    else:
-                        ligne+="{:^2}".format(" ")
-                else:
-                    ligne+="{:^2}".format(str(self.carte[i][j]))
-            print(ligne+"|")
-        print("-"*(len(self.carte)*2+3))
 
     def get_piece(self, col, ligne):
         return Piece.listePieces[self.carte[col][ligne].zone]
 
+    def placer_depart(self, num_depart):
+        self.depart = num_depart
+        
     def affiche_lab(self, piece_actu=(0,0)):
         #Méthode d'affichage du labyrinthe dans une fenêtre 
         def trouve_coords_elem(x_lab, y_lab):
