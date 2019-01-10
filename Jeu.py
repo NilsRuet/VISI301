@@ -134,13 +134,16 @@ class Jeu:
     def executer_actions_ennemis(self):
         CarteUnePiece.cartesChargees[self.perso.piece_actuelle].action_ennemis(self.perso)
 
+    def gerer_transitions(self):
+        Piece.listePieces[self.perso.piece_actuelle].revele(self.laby)
+        
     def gerer_etat_jeu(self):
         if self.perso.vie==0:
             #Détection défaite, si le joueur n'a plus de vie
             self.gagne=False
             self.arreter_jeu()
             
-        if self.perso.sortie_atteinte(self.laby.arrivee):
+        if self.perso.sortie_atteinte(self.laby.arrivee) and False:
             #Détection de l'arrivée dans la pièce finale du labyrinthe
             self.gagne=True
             self.arreter_jeu()
@@ -197,7 +200,7 @@ class Jeu:
         while self.continuer:
             self.gerer_events()
             self.gerer_actions_event()
-            Piece.listePieces[self.perso.piece_actuelle].revele(self.laby)
+            self.gerer_transitions()
             self.executer_actions_ennemis()
             self.gerer_etat_jeu()
             self.redrawGameWindow()

@@ -48,10 +48,11 @@ class Joueur(Perso):
     #Personnage joué par l'utilisateur
     sprite_direction={"HAUT":"joueurH","BAS":"joueurB","GAUCHE":"joueurG","DROITE":"joueurD"}
     
-    VIE_DEPART=150
+    VIE_DEPART=100
+    #Vie de depart du joueur
     #Pour les tests
-    VITESSE=100
-    #Vie de départ du joueur
+    VITESSE=250
+    #Vitesse de départ du joueur
 
     def __init__(self,x,y,width,height,pieceF=1):
         Perso.__init__(self,x,y,width,height,Joueur.VITESSE)

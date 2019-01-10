@@ -36,7 +36,6 @@ class Melee(Arme):
             if self.attaque<self.min_attaque:
                 #On limite l'attaque à une attaque minimale
                 self.attaque=self.min_attaque
-            print(self.attaque)
 
     def enlever_durabilite(self, attaque):
         #Chaque fois qu'on attaque et qu'il reste de la durabilité, l'arme perd en durabilité
