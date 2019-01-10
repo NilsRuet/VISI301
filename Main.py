@@ -31,8 +31,8 @@ def traiter_choix_menu_principal(action, options):
             jeu.executer_jeu()
             enjeu=jeu.rejouer
 
-##    elif action == 1 :  #Tutoriel
-##        lance_tutoriel()
+    elif action == 1 :  #Tutoriel
+        lance_tutoriel()
         
     elif action ==2: #Options
         lance_options(options)

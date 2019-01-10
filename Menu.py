@@ -120,6 +120,33 @@ def menu_principal():
                 int(70*Affichage.TAILLE_ECRAN[1]/600))
     return menu
 
+#############################################################################################################################################################################
+
+def lance_tutoriel():
+    #définition et affichage de l'image de fond
+    fond = pygame.image.load("ressources/fondtuto1.png").convert()
+    fond = pygame.transform.scale(fond,(Affichage.TAILLE_ECRAN[0], Affichage.TAILLE_ECRAN[1]))
+    Affichage.ECRAN.blit(fond, (0, 0))
+
+    continuer = True
+    while continuer :
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN :
+                if event.type == pygame.QUIT: #si le joueur appuie sur la croix
+                            continuer = False
+        
+                if event.key == pygame.K_RETURN: #si le joueur appuie sur entrée
+                    fond = pygame.image.load("ressources/fondtuto2.png").convert()
+                    fond = pygame.transform.scale(fond,(Affichage.TAILLE_ECRAN[0], Affichage.TAILLE_ECRAN[1]))
+                    Affichage.ECRAN.blit(fond, (0, 0))
+
+                if event.key == pygame.K_ESCAPE: #si le joueur appuie sur échap
+                    continuer = False
+
+        #Rafraichissement de l'affichage
+        pygame.display.update()
+
+
 #################################################################################################################################################################
 
 def menu_options():
