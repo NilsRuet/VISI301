@@ -15,7 +15,7 @@ class Piece:
         self.numPiece=numPieceF
         self.typePiece=typePiece
         #Numéro de la pièce dans le labyrinthe et son stype
-        self.vue=False
+        self.vue=True
         #Booléen vrai si le joueur est déjà entré dans la pièce (=si la pièce a été générée pour l'instant)
         self.i = iF
         self.j = jF

@@ -36,8 +36,9 @@ def traiter_choix_menu_principal(action, options):
         
     elif action ==2: #Options
         lance_options(options)
-        Affichage.init(options.hauteur_fenetre)
         options.applique_changements()
+        Affichage.init(options.hauteur_fenetre)
+        
         
     elif action==3: #Quitter
         fin_utilisation=True

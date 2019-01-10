@@ -47,7 +47,7 @@ class Labyrinthe:
         self.creer_lab_parfait()
         if OptJeu.DIFFICULTE_LABY == "moyenne":
             self.enlever_murs(1/4)
-        elif OptJeu.DIFFICULTE_LABY == "facile":
+        elif OptJeu.DIFFICULTE_LABY == "faible":
             self.enlever_murs(1/2)
         
         self.arrivee = random.randint(1,self.nb_zones)
