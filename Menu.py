@@ -157,7 +157,7 @@ def lance_options(options):
 def menu_taille_fenetre():
     menu = Menu((255,0,0), ["500", "600", "700", "800", "Retour"],
                 Affichage.TAILLE_ECRAN[1]/2-(180*Affichage.TAILLE_ECRAN[1]/600),
-                250, 80, (25*Affichage.TAILLE_ECRAN[1]/600), "Hauteur de la fenêtre",
+                250, 70, (25*Affichage.TAILLE_ECRAN[1]/600), "Hauteur de la fenêtre",
                 Affichage.TAILLE_ECRAN[1]/2-(265*Affichage.TAILLE_ECRAN[1]/600),
                 int(70*Affichage.TAILLE_ECRAN[1]/600))
         
@@ -186,7 +186,7 @@ def lance_taille_fenetre(options):
 def menu_taille_laby():
     menu = Menu((255,0,0), ["Petit", "Moyen", "Grand", "Retour"],
                 Affichage.TAILLE_ECRAN[1]/2-(150*Affichage.TAILLE_ECRAN[1]/600),
-                200, 80, (25*Affichage.TAILLE_ECRAN[1]/600), "Taille du labyrinthe",
+                200, 70, (25*Affichage.TAILLE_ECRAN[1]/600), "Taille du labyrinthe",
                 Affichage.TAILLE_ECRAN[1]/2-(265*Affichage.TAILLE_ECRAN[1]/600),
                 int(70*Affichage.TAILLE_ECRAN[1]/600))
     return menu
@@ -214,7 +214,7 @@ def lance_taille_laby(options):
 def menu_diff_laby():
     menu = Menu((255,0,0), ["Faible", "Moyenne", "Elevée", "Retour"],
                 Affichage.TAILLE_ECRAN[1]/2-(150*Affichage.TAILLE_ECRAN[1]/600),
-                250, (80*Affichage.TAILLE_ECRAN[1]/600), (25*Affichage.TAILLE_ECRAN[1]/600), "Difficulté du labyrinthe",
+                250, 70, (25*Affichage.TAILLE_ECRAN[1]/600), "Difficulté du labyrinthe",
                 Affichage.TAILLE_ECRAN[1]/2-(265*Affichage.TAILLE_ECRAN[1]/600),
                 int(70*Affichage.TAILLE_ECRAN[1]/600))
     return menu
@@ -241,7 +241,7 @@ def lance_diff_laby(options):
 def menu_diff_ennemis():
     menu = Menu((255,0,0), ["Faible", "Moyenne", "Elevée", "Retour"],
                 Affichage.TAILLE_ECRAN[1]/2-(150*Affichage.TAILLE_ECRAN[1]/600),
-                250, 80, (25*Affichage.TAILLE_ECRAN[1]/600), "Difficulté des ennemis",
+                250, 70, (25*Affichage.TAILLE_ECRAN[1]/600), "Difficulté des ennemis",
                 Affichage.TAILLE_ECRAN[1]/2-(265*Affichage.TAILLE_ECRAN[1]/600),
                 int(70*Affichage.TAILLE_ECRAN[1]/600))
     return menu
