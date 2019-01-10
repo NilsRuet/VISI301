@@ -132,7 +132,7 @@ def menu_options():
     
     return menu
 
-def lance_options():
+def lance_options(options):
     continuer = True
     
     #On détermine la première chose à afficher (menu options)
@@ -142,13 +142,13 @@ def lance_options():
         action = menu.lance_menu(Affichage.ECRAN)
         
         if   action == 0: #Taille de la fenêtre
-            lance_taille_fenetre()
+            lance_taille_fenetre(options)
         elif action == 1: #Taille du labyrinthe
-            lance_taille_laby()
+            lance_taille_laby(options)
         elif action == 2: #Difficulté du labyrinthe
-            lance_diff_laby()
+            lance_diff_laby(options)
         elif action == 3: #Difficulté des ennemis
-            lance_diff_ennemis()
+            lance_diff_ennemis(options)
         elif action == 4: #Revenir au menu principal
             continuer = False
 
@@ -163,7 +163,7 @@ def menu_taille_fenetre():
         
     return menu
 
-def lance_taille_fenetre():
+def lance_taille_fenetre(options):
     continuer = True
     
     #On détermine la première chose à afficher (menu taille fenetre)
@@ -171,15 +171,14 @@ def lance_taille_fenetre():
     
     while continuer:
         action = menu.lance_menu(Affichage.ECRAN)
-        
         if   action == 0: #500
-            a=4
+            options.set_hauteur_fenetre(500)
         elif action == 1: #600
-            a=4
+            options.set_hauteur_fenetre(600)
         elif action == 2: #700
-            a=4
+            options.set_hauteur_fenetre(700)
         elif action == 3: #800
-            a=4
+            options.set_hauteur_fenetre(800)
         elif action == 4: #Retour
             continuer = False
 
@@ -193,7 +192,7 @@ def menu_taille_laby():
                 int(70*Affichage.TAILLE_ECRAN[1]/600))
     return menu
 
-def lance_taille_laby():
+def lance_taille_laby(options):
     continuer = True
     
     #On détermine la première chose à afficher (menu taille laby)
@@ -203,11 +202,11 @@ def lance_taille_laby():
         action = menu.lance_menu(Affichage.ECRAN)
         
         if   action == 0: #Petit
-            a = 4
+            options.set_taille_laby(5)
         elif action == 1: #Moyen
-            a = 4
+            options.set_taille_laby(10)
         elif action == 2: #Grand
-            a = 4
+            options.set_taille_laby(15)
         elif action == 3: #Retour
             continuer = False
     
@@ -222,7 +221,7 @@ def menu_diff_laby():
                 int(70*Affichage.TAILLE_ECRAN[1]/600))
     return menu
 
-def lance_diff_laby():
+def lance_diff_laby(options):
     continuer = True
     
     #On détermine la première chose à afficher (menu diff laby)
@@ -232,11 +231,11 @@ def lance_diff_laby():
         action = menu.lance_menu(Affichage.ECRAN)
         
         if   action == 0: #Faible
-            a = 4
+            options.set_difficulte_laby("faible")
         elif action == 1: #Moyenne
-            a = 4
+            options.set_difficulte_laby("moyenne")
         elif action == 2: #Elevée
-            a = 4
+            options.set_difficulte_laby("élevée")
         elif action == 3: #Retour
             continuer = False
 
@@ -250,7 +249,7 @@ def menu_diff_ennemis():
                 int(70*Affichage.TAILLE_ECRAN[1]/600))
     return menu
 
-def lance_diff_ennemis():
+def lance_diff_ennemis(options):
     continuer = True
     
     #On détermine la première chose à afficher (menu diff ennemis)
@@ -260,11 +259,11 @@ def lance_diff_ennemis():
         action = menu.lance_menu(Affichage.ECRAN)
         
         if   action == 0: #Faible
-            a = 4
+            options.set_difficulte_ennemi("faible")
         elif action == 1: #Moyenne
-            a = 4
+            options.set_difficulte_ennemi("moyenne")
         elif action == 2: #Elevée
-            a = 4
+            options.set_difficulte_ennemi("élevée")
         elif action == 3: #Retour
             continuer = False
     
