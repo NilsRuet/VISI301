@@ -20,7 +20,7 @@ La barre rouge représente l'intensité de votre bougie : vous pouvez choisir d'
 Afin de pouvoir jouer à ce jeu, il est nécessaire de réaliser les étapes suivantes :
 * Installer [Python](https://www.python.org/downloads/release/python-372)
 * Installer la bibliothèque [Pygame](http://www.pygame.org/download.shtml) et vérifier qu'elle est bien compatible avec la version de Python téléchargée.
-* Intépréter le fichier "Main.py" et le jeu se lance ensuite.
+* Interpréter le fichier "Main.py" et le jeu se lance ensuite.
 
 ## Commandes
 
