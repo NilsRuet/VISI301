@@ -1,4 +1,4 @@
-########################
+#########################################################################
 # Fichier contenant la boucle gérant le jeu et les évènements liés au jeu
 
 import pygame
@@ -14,6 +14,8 @@ from Armes import *
 class Jeu:
     touche_move_enfoncee = False
     def load_sprites():
+        #Méthode permettant de charger toutes les textures utilisées par le jeu
+
         Sprite("ressources/neige.png","neige",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
         Sprite("ressources/sapin.png","sapin",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1],fix_height=False, decalage_pourcent_y=-50)
         Sprite("ressources/feudecamp.png","feudecamp",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
@@ -21,29 +23,32 @@ class Jeu:
         Sprite("ressources/moufles.png","moufles",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
         Sprite("ressources/raquettes.png","raquettes",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
         Sprite("ressources/charbon.png","charbon",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
-        
+        #Textures de case d'une pièce
+
         Sprite("ressources/ennemiH.png","ennemiH",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
         Sprite("ressources/ennemiB.png","ennemiB",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
         Sprite("ressources/ennemiD.png","ennemiD",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
         Sprite("ressources/ennemiG.png","ennemiG",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
+        #Textures des ennemis
 
         Sprite("ressources/joueurH.png","joueurH",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
         Sprite("ressources/joueurB.png","joueurB",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
         Sprite("ressources/joueurD.png","joueurD",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
         Sprite("ressources/joueurG.png","joueurG",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
+        #Texture du joueur
 
         Sprite("ressources/mur_vertical.png","mur_vertical",Affichage.CARTE.taille_mur[0],Affichage.CARTE.taille_mur[1])
         Sprite("ressources/mur_horizontal.png","mur_horizontal",Affichage.CARTE.taille_mur[1],Affichage.CARTE.taille_mur[0])
         Sprite("ressources/ouverture_verticale.png","ouverture_verticale",Affichage.CARTE.taille_mur[0],Affichage.CARTE.taille_mur[1])
         Sprite("ressources/ouverture_horizontale.png","ouverture_horizontale",Affichage.CARTE.taille_mur[1],Affichage.CARTE.taille_mur[0])
-
         Sprite("ressources/piece_joueur.png","piece_joueur",Affichage.CARTE.taille_piece[0],Affichage.CARTE.taille_piece[1])
         Sprite("ressources/piece_feu_camp.png","piece_feu_de_camp",Affichage.CARTE.taille_piece[0],Affichage.CARTE.taille_piece[1])
         Sprite("ressources/neige.png","piece_vide",Affichage.CARTE.taille_piece[0],Affichage.CARTE.taille_piece[1])
-
         Sprite("ressources/fond_carte.png","fond_carte",Affichage.CARTE.taille,Affichage.CARTE.taille)
+        #Textures utilisées pour afficher la carte du labyrinthe
         
     def reset():
+        #Méthode permettant de réinitialiser les attributs de classe utilisés dans une partie
         Piece.listePieces={}
         CarteUnePiece.cartesChargees={}
          
@@ -68,6 +73,7 @@ class Jeu:
         #Génération du personnage et de la pièce de départ
 
     def gerer_event_move(self, event):
+        #Méthode qui gère les évènements relatifs aux déplacements
         if event.type == pygame.KEYDOWN:
         #On lit les touches enfoncées, on modifie la direction du personnage en fonction
         #On indique aussi qu'une touche de direction est enfoncée
@@ -97,16 +103,19 @@ class Jeu:
                self.touche_move_enfoncee = False   
         
     def gerer_event_interaction(self, event):
+        #Méthode qui gère les évènements où le joueur veut interagir avec un élément
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
                 self.perso.interagir(CarteUnePiece.cartesChargees[self.perso.piece_actuelle])
                 
     def gerer_event_attaque(self, event):
+        #Méthode qui gère les évènements d'attaque
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
                 self.perso.attaquer()
 
     def gerer_event_quit(self, event):
+        #Méthode qui gère les évènements pour quitter le jeu
         if event.type == pygame.QUIT:
             #si on appuie sur la croix on quitte la boucle de jeu
             #et on ne rentre pas dans le menu gameover => on revient au menu principal
@@ -114,6 +123,7 @@ class Jeu:
             self.entrer_gameover = False
             
     def gerer_event_changement_attaque(self, event):
+        #Méthode qui gère les évènements où le joueur veut modifier l'attaque de son arme
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_d:
                 self.perso.arme.modifier_attaque(round(-self.perso.arme.max_attaque/10))
@@ -121,6 +131,7 @@ class Jeu:
                 self.perso.arme.modifier_attaque(round(self.perso.arme.max_attaque/10))
     
     def gerer_events(self):
+        #Méthode appelant toutes les méthodes de gestion d'évènement
         for event in pygame.event.get():
             self.gerer_event_quit(event)
             self.gerer_event_move(event)
@@ -129,17 +140,21 @@ class Jeu:
             self.gerer_event_attaque(event)
             
     def gerer_actions_event(self):
+        #Méthode appliquant les actions à faire lorsque des évènements sont en cours
         if self.touche_move_enfoncee:
             self.perso.move(CarteUnePiece.cartesChargees[self.perso.piece_actuelle])
 
 
     def executer_actions_ennemis(self):
+        #Méthode faisant agir les ennemis
         CarteUnePiece.cartesChargees[self.perso.piece_actuelle].action_ennemis(self.perso)
 
     def gerer_transitions(self):
+        #Méthode de gestion des changements de pièce
         Piece.listePieces[self.perso.piece_actuelle].revele(self.laby)
         
     def gerer_etat_jeu(self):
+        #Méthode qui gère l'état du jeu
         if self.perso.vie<=0:
             #Détection défaite, si le joueur n'a plus de vie
             self.gagne=False

@@ -53,6 +53,7 @@ class Piece:
         Piece.listePieces[num_depart].typePiece = "depart"
 
     def calcule_distances(labyF):
+        #Méthode qui affecte la distance à l'arrivée de chaque pièce et renvoie le numéro de la pièce la plus éloignée
         def traite_voisines_piece(numPiece, liste_pieces_traitees):
             #Traite une piece de la liste des pieces dont on veut la distance et rajoute ses pieces voisines à la fin
             #Ainsi on traite les pieces dans l'ordre de distance par rapport à la piece d'arrivée
