@@ -112,10 +112,10 @@ class Menu:
 ###############################################################################################################################################
 #définition et gestion de menus utilisés dans le programme :
 def menu_principal():
-    #menu d'accueil du jeu
+    # définition du menu d'accueil du jeu
     menu = Menu((255,0,0), ["Jouer", "Tutoriel", "Options", "Quitter"],
                 Affichage.TAILLE_ECRAN[1]/2-(150*Affichage.TAILLE_ECRAN[1]/600),
-                200, 80, (25*Affichage.TAILLE_ECRAN[1]/600), "Menu Principal",
+                200, 80, (25*Affichage.TAILLE_ECRAN[1]/600), "SnowForest",
                 Affichage.TAILLE_ECRAN[1]/2-(265*Affichage.TAILLE_ECRAN[1]/600),
                 int(70*Affichage.TAILLE_ECRAN[1]/600))
     return menu
@@ -123,6 +123,7 @@ def menu_principal():
 #############################################################################################################################################################################
 
 def lance_tutoriel():
+    #gère les évènements du menu tutoriel
     #définition et affichage de l'image de fond
     fond = pygame.image.load("ressources/fondtuto1.png").convert()
     fond = pygame.transform.scale(fond,(Affichage.TAILLE_ECRAN[0], Affichage.TAILLE_ECRAN[1]))

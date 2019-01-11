@@ -1,0 +1,91 @@
+Jeu réalisé lors du module VISI301
+
+Le but du jeu est d'atteindre la fin d'un labyrinthe en déplaçant un personnage.
+
+
+
+Fonctionnalités
+
+-Afficher les éléments du jeu:
+	-Gérer le chargement d'images
+
+	-Créer une manière de pouvoir positionner et repositionner des éléments sur la fenêtre facilement
+
+	-Gérer l'ordre d'affichage des éléments sur la fenêtre
+
+-Modifier les options du jeu :
+	-Création de menus permettant à l'utilisateur de choisir la difficulté du jeu et les propriétés d'affichage
+
+	-Régler la taille de la fenêtre et adapter l'affichage des différents éléments en fonction de cette taille
+
+	-Générér des labyrinthes et des ennemis de difficultés différentes
+
+-Se déplacer dans un labyrinthe généré aléatoirement, de difficulté et de taille variable:
+	-Générer et afficher une pièce à partir des données des cases qui la constituent
+
+	-Créer un personnage qui se déplace quand des touches directionnelles sont enfoncées par l'utilisateur
+	(gestion des évènements)
+
+	-Déplacer le personnage dans une pièce et gérer les collisions avec le bord de la pièce, des murs ...
+
+	-Gestion de la vitesse de déplacement d'un personnage
+	
+	-Lecture des caractéristiques d'une pièce dans un fichier, afin de créer plusieurs types de salles
+
+	-Générer un labyrinthe parfait aléatoire, pouvoir enlever des murs supplémentaires pour régler la difficulté
+
+	-Placer une salle de départ et salle d'arrivée éloignées l'une de l'autre dans un labyrinthe.
+	
+	-Générer des cases dans chaque pièce qui permettent de se déplacer vers d'autres pièces,
+	 en fonction des murs présents autour de la pièce
+
+-Combattre des ennemis devenant de plus en plus fort au fil de l'exploration :
+	-Création d'ennemis qui se déplacent vers le joueur et l'attaquent s'il est proche d'eux
+
+	-Gestion de la collision des ennemis avec les éléments de la pièce, le joueur et les autres ennemis
+
+	-Gestion de la vie du personnage qui diminue quand les ennemis l'attaque et entraîne la fin de la partie
+	 si elle tombe à zéro.
+
+	-Création d'une arme pour le joueur, qui lui permet d'attaquer les ennemis.
+
+	-Gestion de la vie des ennemis, qui disparaissent si leur vie est à zéro.
+
+	-Gestion de la puissance d'attaque et de la fréquence d'attaque des ennemis et du joueur.
+
+	-Gestion d'une durabilité de l'arme du joueur, qui devient inefficace si sa durabilité vaut zéro.
+
+
+-Augmenter la vitesse, la résistance ou la capacité du joueur à infliger des dégâts aux ennemis :
+	-Système de points obtenus lorsque le joueur tue les ennemis
+
+	-Implémentation de cases avec lequel le joueur peut interagir, et qui ont différents effets
+	(régénération, augmentation des statistiques, fin du jeu...)
+
+
+Bugs connus :
+Entrer dans le menu des options réinitialise toutes les options [Amélioration possible]
+Le rectangle vert de sélection des menus ne se replace pas comme il faut dans le menu des options.
+
+Ce qui manque par rapport au plan initial :
+-Diversité dans les types d'armes, les types d'ennemis, les moyens de changer de pièce
+-ELéments donnant une indication sur où se trouve la fin du labyrinthe
+-Système d'objets à récupérer pour rendre accessible des parties du labyrinthe inaccessibles sans
+-Quelques éléments permettant de rendre le jeu plus joli ou plus instinctif à jouer
+ (animations d'attaques, changement de position progressif des personnages lors des déplacements)
+
+
+
+Difficultés :
+	-De creation:
+Equilibrage de la difficulté du jeu (cela se ressent dans la version actuelle)
+Trouver une idée de jeu
+Imaginer à quoi peut ressembler le jeu
+
+	-Techniques:
+Affichage des éléments à partir d'une structure de donnée, en particulier de la carte du labyrinthe.
+Gérer les différentes variables et classe pour pouvoir accéder à celle nécessaires facilement dans le code.
+Organisation du code : quelle organisation est la meilleure ? Comment séparer les fonctionnalités ?
+
+
+

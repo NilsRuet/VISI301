@@ -185,8 +185,8 @@ class Jeu:
 
     def game_over(self):
         if self.gagne:
-            titre="Vous avez gagné !"
-            taille_titre = int(110*Affichage.TAILLE_ECRAN[1]/600)
+            titre="Bravo ! vous avez trouvé le charbon !"
+            taille_titre = int(70*Affichage.TAILLE_ECRAN[1]/600)
         else:
             titre="Game over"
             taille_titre = int(180*Affichage.TAILLE_ECRAN[1]/600)

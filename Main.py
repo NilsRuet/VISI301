@@ -11,18 +11,20 @@ from Affichage import *
 #Initialisations pygame
 pygame.init()
 pygame.font.init()
-pygame.display.set_caption("Jeu")
+pygame.display.set_caption("SnowForest")
 
 #Initialisation de la fenêtre (fond noir)
 Affichage.ECRAN.fill((0,0,0))
 ###########################################################################################
 def choix_menu_principal():
+    #définition du menu principal
     menu = menu_principal()
     action = menu.lance_menu(Affichage.ECRAN)
     options = OptJeu() #On définit des options par défaut
     return action, options
 
 def traiter_choix_menu_principal(action, options):
+    #traitement du choix en fonction du bouton sélectionné dans le menu
     fin_utilisation=False
     if action==0: #Jouer
         enjeu=True
