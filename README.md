@@ -4,7 +4,7 @@
 
 * Dans ce jeu, vous incarnez un personnage en plein hiver. L'hiver est particulièrement froid et votre personnage décide de s'aventurer dans la fôret, car il parait qu'elle contiendrait une source de chaleur permanente qui pourrait lui permettre de chauffer sa maison. Armé d'une bougie, à vous de la trouver !
 
-* Salle : La première salle dans laquelle vous apparaissez contient un feu de camp qui vous permet de régénérer votre vie et la durabilité de votre bougie. Dans chaque salle, vous pouvez trouver des obstacles (des arbres), ainsi que des ennemis (des bonhommes de neige) qui se déplaceront dans votre direction (attention ils peuvent avoir des caractéristiques différentes)Faire fondre un ennemi vous rapportera un point.
+* Salle : La première salle dans laquelle vous apparaissez contient un feu de camp qui vous permet de régénérer votre vie et la durabilité de votre bougie. Dans chaque salle, vous pouvez trouver des obstacles (des arbres), ainsi que des ennemis (des bonhommes de neige) qui se déplaceront dans votre direction (attention ils peuvent avoir des caractéristiques différentes). Faire fondre un ennemi vous rapportera un point.
 
 * Repos et augmentation des statistiques : Il existe également des salles "de repos", où il n'y a pas d'ennemis. Ces salles contiennent, en plus d'un feu de camp, 3 objets : interagissez avec pour augmenter vos statistiques en échange des points que vous avez obtenus en faisant fondre des bonhommes de neige. Les gants vous permettront de mieux résister au froid, les raquettes d'augmenter votre vitesse de déplacement et le stock de bougies, d'augmenter la durabilité de votre bougie.
 
