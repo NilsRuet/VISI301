@@ -147,7 +147,7 @@ class Labyrinthe:
         #Méthode d'affichage du labyrinthe dans une fenêtre 
         def trouve_coords_elem(x_lab, y_lab):
             largeur_piece = Affichage.CARTE.taille_piece[0]
-            epaisseur_mur = round(largeur_piece/10)
+            epaisseur_mur = Affichage.CARTE.taille_mur[0]
 
             nb_pieces_x = ((x_lab+1)//2)
             nb_murs_x = ((x_lab)//2)

@@ -41,8 +41,19 @@ class Affichage_carte:
         #Coordonnées "de départ" pour afficher la carte
 
         self.taille = tailleF
-        vraie_taille_piece = round((tailleF/OptJeu.TAILLE_LABYRINTHE))
-        self.taille_piece = (vraie_taille_piece,vraie_taille_piece)
+        #Taille = x*largeur_piece + x-1 * largeur_mur
+        #Taille = x*largeur_piece + (x-1)*0.1*largeur_piece
+        #largeur_piece*(x+(x-1)*0.1) = taille
+        #largeur_piece = taille/(1.1x-0.1)
+        
+        largeur_piece = round(tailleF/(1.1*OptJeu.TAILLE_LABYRINTHE-0.1))
+        largeur_mur = round(0.1*largeur_piece)
+        #La largeur de la pièce est la solution du système où 
+            #taille_carte = taille_labyrinthe*taille_piece + (taille_labyrinthe-1)*epaisseur_mur
+            #epaisseur_mur = 0.1*taille_piece
+        
+        self.taille_mur = (largeur_mur,largeur_piece)
+        self.taille_piece = (largeur_piece,largeur_piece)
         #Taille des cases de la carte
 
 class Affichage_vie:

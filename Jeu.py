@@ -32,18 +32,16 @@ class Jeu:
         Sprite("ressources/joueurD.png","joueurD",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
         Sprite("ressources/joueurG.png","joueurG",Affichage.JEU.taille_case[0],Affichage.JEU.taille_case[1])
 
-        Sprite("ressources/mur_vertical.png","mur_vertical",Affichage.CARTE.taille_piece[0]//10,Affichage.CARTE.taille_piece[1])
-        Sprite("ressources/mur_horizontal.png","mur_horizontal",Affichage.CARTE.taille_piece[0],Affichage.CARTE.taille_piece[1]//10)
-        Sprite("ressources/ouverture_verticale.png","ouverture_verticale",Affichage.CARTE.taille_piece[0]//10,Affichage.CARTE.taille_piece[1])
-        Sprite("ressources/ouverture_horizontale.png","ouverture_horizontale",Affichage.CARTE.taille_piece[0],Affichage.CARTE.taille_piece[1]//10)
+        Sprite("ressources/mur_vertical.png","mur_vertical",Affichage.CARTE.taille_mur[0],Affichage.CARTE.taille_mur[1])
+        Sprite("ressources/mur_horizontal.png","mur_horizontal",Affichage.CARTE.taille_mur[1],Affichage.CARTE.taille_mur[0])
+        Sprite("ressources/ouverture_verticale.png","ouverture_verticale",Affichage.CARTE.taille_mur[0],Affichage.CARTE.taille_mur[1])
+        Sprite("ressources/ouverture_horizontale.png","ouverture_horizontale",Affichage.CARTE.taille_mur[1],Affichage.CARTE.taille_mur[0])
 
         Sprite("ressources/piece_joueur.png","piece_joueur",Affichage.CARTE.taille_piece[0],Affichage.CARTE.taille_piece[1])
         Sprite("ressources/piece_feu_camp.png","piece_feu_de_camp",Affichage.CARTE.taille_piece[0],Affichage.CARTE.taille_piece[1])
         Sprite("ressources/neige.png","piece_vide",Affichage.CARTE.taille_piece[0],Affichage.CARTE.taille_piece[1])
 
-        vraie_taille_carte = round(Affichage.CARTE.taille*(1.1)-(Affichage.CARTE.taille_piece[0]//10))
-        #Opération qui compense les murs, qui ne sont pas pris en compte lors de la spécification de la taille
-        Sprite("ressources/fond_carte.png","fond_carte",vraie_taille_carte,vraie_taille_carte)
+        Sprite("ressources/fond_carte.png","fond_carte",Affichage.CARTE.taille,Affichage.CARTE.taille)
         
     def reset():
         Piece.listePieces={}
