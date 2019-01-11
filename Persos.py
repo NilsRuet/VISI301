@@ -25,7 +25,7 @@ class Perso():
         #On connaît moment où son dernier mouvement a été effectué ainsi que sa vitesse
 
     def case_ennemi(x, y, piece):
-        #On vérifie que la case ne contient pas un ennemi
+        #Méthode vérifiant que la case ne contient pas un ennemi
         ennemi_trouve = False
         return piece.ennemis.get((x,y)) != None
         
@@ -33,20 +33,22 @@ class Perso():
         #Méthode permettant de savoir si une case dans une pièce autorise des personnages à se déplacer dessus
         autoriser_mouvement=True
         if not 0 <= x < OptJeu.NB_CASES:
-            autoriser_mouvement = False
-            
+            autoriser_mouvement = False         
         elif not 0 <= y < OptJeu.NB_CASES:
             autoriser_mouvement = False
+        #On vérifie que la case est dans la pièce
 
         else:
-            if piece.carte[x][y].collision: 
+            if piece.carte[x][y].collision:
+                #On vérifie que la case autorise les personnages à etre dessus
                 autoriser_mouvement = False
                 
-        autoriser_mouvement = autoriser_mouvement and not Perso.case_ennemi(x, y, piece)    
+        autoriser_mouvement = autoriser_mouvement and not Perso.case_ennemi(x, y, piece)
+        #On vérifie en plus que la case ne contient pas d'ennemi
         return autoriser_mouvement
 
 class Joueur(Perso):
-    #Personnage joué par l'utilisateur
+    #Classe représentant le personnage joué
     sprite_direction={"HAUT":"joueurH","BAS":"joueurB","GAUCHE":"joueurG","DROITE":"joueurD"}
     
     VIE_DEPART=100
@@ -68,6 +70,7 @@ class Joueur(Perso):
         self.gagne = False
         
     def set_arme(self, armeF):
+        #Permet de modifier l'arme du joueur
         self.arme = armeF
     
     def move(self,piece):
@@ -104,10 +107,12 @@ class Joueur(Perso):
         return self.piece_actuelle==num_sortie
 
     def affichage_vie(self):
+        #Méthode affichant la barre de vie du joueur
         rect_vie = Affichage.rectangle_barre_progressive(Affichage.VIE.coords.xi, Affichage.VIE.coords.yi, Affichage.VIE.largeur, Affichage.VIE.hauteur, self.vie, self.max_vie)
         pygame.draw.rect(Affichage.ECRAN, (0, 127, 0), rect_vie)
 
     def affichage_points(self):
+        #Méthode affichant les points du joueur
         texte="Points : {}".format(self.points)
         font = pygame.font.SysFont('Calibri',Affichage.POINTS.taille_texte) #choix de la police d'écriture et de la taille
         texte = font.render(texte, 1, (255,255,255))
@@ -115,12 +120,17 @@ class Joueur(Perso):
         
 
     def attaquer(self):
+        #Méthode définissant les actions exécutées lorsque le joueur attaque
         self.arme.attaquer()
 
     def se_repose(self):
+        #Méthode définissant les actions exécutées lorsque le joueur se repose
         self.vie = self.max_vie
 
     def interagir(self, piece):
+        #Méthode permettant de savoir quelle action effectuer sur le personnage
+        #en fonction de la case avec laquelle le personnage essaye d'interagir
+        
         x_case = self.x + Perso.directions[self.direction][0]
         y_case = self.y + Perso.directions[self.direction][1]
         if 0<=x_case<OptJeu.NB_CASES and 0<=y_case<OptJeu.NB_CASES:
@@ -144,7 +154,6 @@ class Joueur(Perso):
             
     def affichage(self):
         #Méthode d'affichage du joueur
-        #Méthode d'affichage d'un ennemi
 
         sprite = Sprite.liste[Joueur.sprite_direction[self.direction]]
         
@@ -261,6 +270,7 @@ class Ennemi(Perso):
             self.last_mvt = pygame.time.get_ticks()
     
     def attaquer(self, joueur):
+        #Méthode gérant les actions exécutées quand l'ennemi veut attaquer le joueur
         if [joueur.x-self.x,joueur.y-self.y] == Perso.directions[self.direction]:
             #Si le joueur est sur la case où l'ennemi veut se déplacer
             if not ((pygame.time.get_ticks() - self.last_attaque) < self.vitesse_attaque):
@@ -268,6 +278,7 @@ class Ennemi(Perso):
                 self.last_attaque = pygame.time.get_ticks()
 
     def meurt(self):
+        #Méthode permettant de supprimer un ennemi
         del self.piece.ennemis[self.x, self.y]
 
     def affiche(self):

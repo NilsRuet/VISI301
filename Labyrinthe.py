@@ -53,6 +53,7 @@ class Labyrinthe:
         self.arrivee = random.randint(1,self.nb_zones)
     
     def init_struct_carte_lab(self, taille):
+        #Méthode qui initialise un tableau qui sert de base à l'application de l'algorithme de génération de labyrinthe
         self.carte=["+"]*(taille)
         for colonne in range(len(self.carte)):
             self.carte[colonne]=["+"]*(taille)
@@ -74,6 +75,7 @@ class Labyrinthe:
                 self.carte[colonne][ligne]=True          
 
     def creer_lab_parfait(self):
+        #Méthode contenant l'algorithme de génération d'un labyrinthe
         #Début de l'algorithme de génération
         #On liste les murs du labyrinthes
         liste_murs=[]
@@ -113,6 +115,7 @@ class Labyrinthe:
                 self.carte[x][y]=False
 
     def enlever_murs(self, proportion):
+        #Méthode qui permet d'enlever un certain pourcentage de mur dans ceux restant dans un labyrinthe
         liste_murs=[]
         #On liste les murs verticaux
         for colonne in range(1,len(self.carte), 2):
@@ -138,6 +141,7 @@ class Labyrinthe:
         return num1!=num2
 
     def get_piece(self, col, ligne):
+        #Méthode permettant d'obtenir un numéro de pièce depuis ses coordonnées
         return Piece.listePieces[self.carte[col][ligne].zone]
 
     def placer_depart(self, num_depart):
@@ -146,6 +150,8 @@ class Labyrinthe:
     def affiche_lab(self, piece_actu=(0,0)):
         #Méthode d'affichage du labyrinthe dans une fenêtre 
         def trouve_coords_elem(x_lab, y_lab):
+            #Permet de retrouver les coordonnées d'affichage d'un élément
+            #en fonction de sa place dans le tableau représentant labyrinthe
             largeur_piece = Affichage.CARTE.taille_piece[0]
             epaisseur_mur = Affichage.CARTE.taille_mur[0]
 
